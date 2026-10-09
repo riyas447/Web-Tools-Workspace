@@ -360,7 +360,7 @@
                         <input type="checkbox" id="chk-col-public-status" checked onchange="toggleDnsColumn('col-public-status')" class="rounded border-slate-700 text-emerald-500 me-2 dns-col-checkbox"> Public Status
                     </label>
                     <label class="inline-flex items-center theme-input px-2.5 py-1.5 rounded-lg border cursor-pointer text-emerald-400 font-semibold">
-                        <input type="checkbox" id="chk-col-org-name" checked onchange="toggleDnsColumn('col-org-name')" class="rounded border-slate-700 text-emerald-500 me-2 dns-col-checkbox"> Registrant Name & Address
+                        <input type="checkbox" id="chk-col-org-name" checked onchange="toggleDnsColumn('col-org-name')" class="rounded border-slate-700 text-emerald-500 me-2 dns-col-checkbox"> Registrant Details
                     </label>
                 </div>
             </div>
@@ -781,12 +781,30 @@
         }
 
         /* --------------------------------------------------------------------------
-           3. BULK DOMAIN DNS CHECKER LOGIC
+           3. BULK DOMAIN DNS CHECKER LOGIC (UPDATED DYNAMIC COLUMN VISIBILITY)
            -------------------------------------------------------------------------- */
         let dnsResultsStore = [];
         let dnsSortCol = 'domain';
         let dnsSortAsc = true;
         let allDnsColsSelected = true;
+
+        const dnsColumnMap = [
+            { id: 'chk-col-a', class: 'col-a', key: 'a', name: 'A Record' },
+            { id: 'chk-col-txt', class: 'col-txt', key: 'txt', name: 'TXT / SPF' },
+            { id: 'chk-col-dmarc', class: 'col-dmarc', key: 'dmarc', name: 'DMARC' },
+            { id: 'chk-col-bimi', class: 'col-bimi', key: 'bimi', name: 'BIMI' },
+            { id: 'chk-col-cname', class: 'col-cname', key: 'cname', name: 'CNAME' },
+            { id: 'chk-col-ns', class: 'col-ns', key: 'ns', name: 'NS' },
+            { id: 'chk-col-soa', class: 'col-soa', key: 'soa', name: 'SOA' },
+            { id: 'chk-col-mx', class: 'col-mx', key: 'mx', name: 'MX' },
+            { id: 'chk-col-ssl', class: 'col-ssl', key: 'ssl', name: 'SSL Status' },
+            { id: 'chk-col-registrar', class: 'col-registrar', key: 'registrar', name: 'Registrar' },
+            { id: 'chk-col-created', class: 'col-created', key: 'created', name: 'Creation Date' },
+            { id: 'chk-col-expiry', class: 'col-expiry', key: 'expiry', name: 'Expiry Date' },
+            { id: 'chk-col-age', class: 'col-age', key: 'ageStr', name: 'Domain Age' },
+            { id: 'chk-col-public-status', class: 'col-public-status', key: 'status', name: 'Public Status' },
+            { id: 'chk-col-org-name', class: 'col-org-name', key: 'registrantDetails', name: 'Registrant Details' }
+        ];
 
         function loadDnsSample() {
             document.getElementById('dnsDomainInput').value = "google.com\ndnsimple.com\ngithub.com";
@@ -805,23 +823,43 @@
         }
 
         function toggleDnsColumn(className) {
-            document.querySelectorAll('.' + className).forEach(el => el.classList.toggle('hidden'));
+            const chk = dnsColumnMap.find(c => c.class === className);
+            const isChecked = document.getElementById(chk.id).checked;
+            document.querySelectorAll('.' + className).forEach(el => {
+                if (isChecked) el.classList.remove('hidden');
+                else el.classList.add('hidden');
+            });
+            updateSelectAllButtonState();
         }
 
         function toggleSelectAllDnsColumns() {
             allDnsColsSelected = !allDnsColsSelected;
-            document.querySelectorAll('.dns-col-checkbox').forEach(chk => chk.checked = allDnsColsSelected);
-            const cols = ['col-a', 'col-txt', 'col-dmarc', 'col-bimi', 'col-cname', 'col-ns', 'col-soa', 'col-mx', 'col-ssl', 'col-registrar', 'col-created', 'col-expiry', 'col-age', 'col-public-status', 'col-org-name'];
-            
-            cols.forEach(c => {
-                document.querySelectorAll('.' + c).forEach(el => {
+            dnsColumnMap.forEach(col => {
+                const chk = document.getElementById(col.id);
+                if (chk) chk.checked = allDnsColsSelected;
+                document.querySelectorAll('.' + col.class).forEach(el => {
                     if (allDnsColsSelected) el.classList.remove('hidden');
                     else el.classList.add('hidden');
                 });
             });
+            updateSelectAllButtonState();
+        }
 
-            document.getElementById('selectAllDnsIcon').className = allDnsColsSelected ? 'fa-solid fa-square-check' : 'fa-regular fa-square';
-            document.getElementById('selectAllDnsText').textContent = allDnsColsSelected ? 'Deselect All' : 'Select All';
+        function updateSelectAllButtonState() {
+            const allChecked = dnsColumnMap.every(c => {
+                const el = document.getElementById(c.id);
+                return el ? el.checked : false;
+            });
+            allDnsColsSelected = allChecked;
+            document.getElementById('selectAllDnsIcon').className = allChecked ? 'fa-solid fa-square-check' : 'fa-regular fa-square';
+            document.getElementById('selectAllDnsText').textContent = allChecked ? 'Deselect All' : 'Select All';
+        }
+
+        function getVisibleColumns() {
+            return dnsColumnMap.filter(c => {
+                const el = document.getElementById(c.id);
+                return el ? el.checked : true;
+            });
         }
 
         async function startDnsCheck() {
@@ -860,6 +898,14 @@
                     <td class="p-3 col-org-name"><i class="fa-solid fa-circle-notch fa-spin theme-text-muted"></i></td>
                 `;
                 tbody.appendChild(row);
+
+                // Apply initial column visibility settings
+                dnsColumnMap.forEach(c => {
+                    const chk = document.getElementById(c.id);
+                    if (chk && !chk.checked) {
+                        row.querySelector('.' + c.class).classList.add('hidden');
+                    }
+                });
 
                 fetchDnsDetails(domain, rowId);
             }
@@ -1001,10 +1047,16 @@
                 showToast("Check domains first!", "warning");
                 return;
             }
-            const headers = "Domain\tA Record\tTXT\tMX\tSSL\tRegistrar\tAge";
-            const rows = dnsResultsStore.map(r => `${r.domain}\t${r.a}\t${r.txt}\t${r.mx}\t${r.ssl}\t${r.registrar}\t${r.ageStr}`).join('\n');
+            const activeCols = getVisibleColumns();
+            const headers = ['Domain', ...activeCols.map(c => c.name)].join('\t');
+            const rows = dnsResultsStore.map(r => {
+                const rowVals = [r.domain];
+                activeCols.forEach(c => rowVals.push(r[c.key] || 'N/A'));
+                return rowVals.join('\t');
+            }).join('\n');
+
             copyTextToClipboard(`${headers}\n${rows}`);
-            showToast("All DNS records copied to clipboard!");
+            showToast("Selected DNS records copied to clipboard!");
         }
 
         function exportDnsCSV() {
@@ -1012,16 +1064,25 @@
                 showToast("Check domains first!", "warning");
                 return;
             }
-            let csv = "Domain,A Record,TXT Record,MX Record,SSL Status,Registrar,Age\n";
+            const activeCols = getVisibleColumns();
+            const headers = ['Domain', ...activeCols.map(c => c.name)].join(',');
+            let csv = headers + '\n';
+
             dnsResultsStore.forEach(r => {
-                csv += `"${r.domain}","${r.a}","${r.txt}","${r.mx}","${r.ssl}","${r.registrar}","${r.ageStr}"\n`;
+                const rowVals = [`"${r.domain}"`];
+                activeCols.forEach(c => {
+                    const val = (r[c.key] || 'N/A').toString().replace(/"/g, '""');
+                    rowVals.push(`"${val}"`);
+                });
+                csv += rowVals.join(',') + '\n';
             });
+
             const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
             const link = document.createElement('a');
             link.href = URL.createObjectURL(blob);
             link.download = `dns_records_${new Date().toISOString().slice(0,10)}.csv`;
             link.click();
-            showToast("Exported CSV file!");
+            showToast("Exported selected columns as CSV!");
         }
 
         function sortDnsTable(key) {
@@ -1060,6 +1121,14 @@
                     <td class="p-3 col-org-name">${formatCell(item.registrantDetails)}</td>
                 `;
                 tbody.appendChild(row);
+
+                // Re-apply visibility rules
+                dnsColumnMap.forEach(c => {
+                    const chk = document.getElementById(c.id);
+                    if (chk && !chk.checked) {
+                        row.querySelector('.' + c.class).classList.add('hidden');
+                    }
+                });
             });
         }
 
