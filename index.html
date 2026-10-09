@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Tools Hub - Unified Workspace</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        chatBg: '#1e1f22',
+                        sidebarBg: '#111214',
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome Icons CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Base Root Theme Variables */
+        :root {
+            --bg-main: #090d16;
+            --bg-sidebar: #0f172a;
+            --bg-card: #1e293b;
+            --bg-input: #0f172a;
+            --bg-header: #0f172a;
+            --border-color: #334155;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --text-accent: #38bdf8;
+            --accent-green: #34d399;
+            --accent-amber: #fbbf24;
+            --badge-bg: #1e293b;
+            --hover-row: #1e293b;
+            --scrollbar-thumb: #334155;
+        }
+
+        body.light-theme {
+            --bg-main: #f1f5f9;
+            --bg-sidebar: #ffffff;
+            --bg-card: #ffffff;
+            --bg-input: #f8fafc;
+            --bg-header: #ffffff;
+            --border-color: #e2e8f0;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --text-accent: #0284c7;
+            --accent-green: #059669;
+            --accent-amber: #d97706;
+            --badge-bg: #e2e8f0;
+            --hover-row: #f8fafc;
+            --scrollbar-thumb: #cbd5e1;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.25s ease, color 0.25s ease;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        /* Allow Selection Inside Inputs and Textareas */
+        textarea, input {
+            -webkit-user-select: text !important;
+            -moz-user-select: text !important;
+            -ms-user-select: text !important;
+            user-select: text !important;
+        }
+
+        .theme-sidebar { background-color: var(--bg-sidebar); border-color: var(--border-color); }
+        .theme-card { background-color: var(--bg-card); border-color: var(--border-color); }
+        .theme-input { background-color: var(--bg-input) !important; color: var(--text-main) !important; border-color: var(--border-color) !important; }
+        .theme-text-main { color: var(--text-main) !important; }
+        .theme-text-muted { color: var(--text-muted) !important; }
+        .theme-text-accent { color: var(--text-accent) !important; }
+        .theme-border { border-color: var(--border-color) !important; }
+
+        /* Custom Scrollbars */
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 4px; }
+
+        /* Sheet Table Borders */
+        .sheet-table { border-collapse: separate; border-spacing: 0; }
+        .sheet-table th, .sheet-table td {
+            border-bottom: 1px solid var(--border-color);
+            border-right: 1px solid var(--border-color);
+            vertical-align: top;
+        }
+        .sheet-table th:last-child, .sheet-table td:last-child { border-right: none; }
+        .theme-row:hover { background-color: var(--hover-row); }
+
+        /* Selected Action Buttons State */
+        .btn-selected-decode { background-color: #0d9488 !important; border-color: #2dd4bf !important; color: #fff !important; box-shadow: 0 0 12px rgba(45, 212, 191, 0.4); }
+        .btn-selected-b64 { background-color: #2563eb !important; border-color: #60a5fa !important; color: #fff !important; box-shadow: 0 0 12px rgba(96, 165, 250, 0.4); }
+        .btn-selected-qp { background-color: #7c3aed !important; border-color: #c084fc !important; color: #fff !important; box-shadow: 0 0 12px rgba(192, 132, 252, 0.4); }
+        .btn-selected-utf32 { background-color: #d97706 !important; border-color: #fbbf24 !important; color: #fff !important; box-shadow: 0 0 12px rgba(251, 191, 36, 0.4); }
+        .btn-selected-stricthex { background-color: #059669 !important; border-color: #34d399 !important; color: #fff !important; box-shadow: 0 0 12px rgba(52, 211, 153, 0.4); }
+        .btn-selected-ascii { background-color: #e11d48 !important; border-color: #fb7185 !important; color: #fff !important; box-shadow: 0 0 12px rgba(251, 113, 133, 0.4); }
+    </style>
+</head>
+<body class="h-full flex flex-col md:flex-row overflow-hidden" id="appBody">
+
+    <aside class="w-full md:w-80 theme-sidebar border-r flex flex-col justify-between shrink-0 z-20">
+        <div>
+            <!-- Header Branding & Mode Toggle -->
+            <div class="p-4 border-b theme-border flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-teal-500 to-emerald-400 flex items-center justify-center text-white shadow-lg">
+                        <i class="fa-solid fa-shapes text-lg"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-sm font-bold tracking-wide theme-text-main">WebTools Workspace</h1>
+                        <p class="text-[11px] theme-text-muted">Multi-Portal Productivity Tool</p>
+                    </div>
+                </div>
+                <button id="themeToggleBtn" onclick="toggleGlobalTheme()" class="p-2.5 theme-card border hover:opacity-80 rounded-xl transition shadow-sm" title="Toggle Light/Dark Theme">
+                    <i id="themeToggleIcon" class="fa-solid fa-sun text-amber-400 text-sm"></i>
+                </button>
+            </div>
+
+            <!-- Portal Buttons Navigation Header -->
+            <div class="px-4 pt-4 pb-2">
+                <span class="text-[11px] font-bold theme-text-muted uppercase tracking-wider">Portals</span>
+            </div>
+
+            <!-- Sidebar Navigation Items -->
+            <nav class="px-3 space-y-2" id="sidebarNav">
+                <!-- 1. Email Subject Decoder & Encoder -->
+                <button onclick="switchPortal('email')" id="nav-btn-email" class="nav-item w-full flex items-center space-x-3 px-3.5 py-3 rounded-xl text-xs font-semibold transition-all duration-200 bg-indigo-600 text-white shadow-lg">
+                    <div class="w-8 h-8 rounded-lg bg-indigo-500/30 flex items-center justify-center text-indigo-200 shrink-0">
+                        <i class="fa-solid fa-envelope-open-text text-sm"></i>
+                    </div>
+                    <div class="text-left truncate">
+                        <div class="truncate">Email Subject Decoder</div>
+                        <div class="text-[10px] font-normal opacity-80 truncate">MIME, Base64 & Text Cases</div>
+                    </div>
+                </button>
+
+                <!-- 2. Bulk Domain DNS Checker -->
+                <button onclick="switchPortal('dns')" id="nav-btn-dns" class="nav-item w-full flex items-center space-x-3 px-3.5 py-3 rounded-xl text-xs font-semibold transition-all duration-200 theme-text-muted hover:bg-slate-800/40 border border-transparent">
+                    <div class="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center text-emerald-400 shrink-0">
+                        <i class="fa-solid fa-network-wired text-sm"></i>
+                    </div>
+                    <div class="text-left truncate">
+                        <div class="truncate">Bulk Domain DNS Checker</div>
+                        <div class="text-[10px] font-normal theme-text-muted truncate">DNS, SSL & WHOIS Lookup</div>
+                    </div>
+                </button>
+
+                <!-- 3. Random Word Generator -->
+                <button onclick="switchPortal('words')" id="nav-btn-words" class="nav-item w-full flex items-center space-x-3 px-3.5 py-3 rounded-xl text-xs font-semibold transition-all duration-200 theme-text-muted hover:bg-slate-800/40 border border-transparent">
+                    <div class="w-8 h-8 rounded-lg bg-amber-500/20 flex items-center justify-center text-amber-400 shrink-0">
+                        <i class="fa-solid fa-shuffle text-sm"></i>
+                    </div>
+                    <div class="text-left truncate">
+                        <div class="truncate">Random Word Generator</div>
+                        <div class="text-[10px] font-normal theme-text-muted truncate">Unique Words & Custom Strings</div>
+                    </div>
+                </button>
+            </nav>
+        </div>
+
+        <!-- Sidebar Footer Branding -->
+        <div class="p-4 border-t theme-border flex items-center justify-between text-xs theme-text-muted">
+            <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Active</span>
+            <span class="font-normal tracking-widest text-[11px]">by <strong class="font-semibold theme-text-main">Riyas</strong></span>
+        </div>
+    </aside>
+
+    <main class="flex-1 flex flex-col h-full overflow-y-auto custom-scrollbar p-4 sm:p-6 lg:p-8" id="mainWorkspace">
+        
+        <!-- ==========================================================================
+             PORTAL 1: EMAIL SUBJECT DECODER & ENCODER TOOL
+             ========================================================================== -->
+        <section id="portal-email" class="portal-section space-y-6 max-w-5xl mx-auto w-full">
+            <div class="border-b theme-border pb-3 flex items-center justify-between">
+                <div>
+                    <h2 class="text-xl font-bold theme-text-main flex items-center gap-2">
+                        <i class="fa-solid fa-envelope-open-text text-amber-400"></i> Email Subject & Text Case Converter
+                    </h2>
+                    <p class="text-xs theme-text-muted mt-1">Decode/Encode email headers ASCII, UTF-8, UTF-32, Base64 and QP support.</p>
+                </div>
+            </div>
+
+            <!-- Email Encoder/Decoder Card -->
+            <div class="theme-card border rounded-2xl p-5 shadow-xl space-y-4">
+                <div>
+                    <div class="flex justify-between items-center mb-2">
+                        <label class="text-xs font-semibold theme-text-muted uppercase tracking-wider">Input Text / Encoded String</label>
+                        <button onclick="pasteInputEmail()" class="text-xs theme-text-muted hover:theme-text-main transition flex items-center gap-1">
+                            <i class="fa-regular fa-clipboard"></i> Paste
+                        </button>
+                    </div>
+                    <textarea id="inputTextEmail" rows="4" 
+                        class="w-full theme-input border rounded-xl p-3.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition font-mono text-xs sm:text-sm custom-scrollbar"
+                        placeholder="Enter plain text OR encoded header like:&#10;=?utf-8?q?=48=69=20=67=6F=6F=64=20=6D=6F=72=6E=69=6E=67?=&#10;Hello world example"></textarea>
+                </div>
+
+                <!-- Text Case Converters -->
+                <div class="theme-card p-3 rounded-xl border">
+                    <p class="text-[11px] font-semibold text-sky-400 uppercase tracking-wider mb-2">Text Case Converters:</p>
+                    <div class="flex flex-wrap gap-2">
+                        <button onclick="changeCaseEmail('sentence')" class="text-xs theme-card border hover:border-sky-500 theme-text-main px-3 py-1.5 rounded-lg transition active:scale-95">Sentence case</button>
+                        <button onclick="changeCaseEmail('lower')" class="text-xs theme-card border hover:border-sky-500 theme-text-main px-3 py-1.5 rounded-lg transition active:scale-95">lower case</button>
+                        <button onclick="changeCaseEmail('upper')" class="text-xs theme-card border hover:border-sky-500 theme-text-main px-3 py-1.5 rounded-lg transition active:scale-95">UPPER CASE</button>
+                        <button onclick="changeCaseEmail('capitalized')" class="text-xs theme-card border hover:border-sky-500 theme-text-main px-3 py-1.5 rounded-lg transition active:scale-95">Capitalized Case</button>
+                        <button onclick="changeCaseEmail('alternating')" class="text-xs theme-card border hover:border-sky-500 theme-text-main px-3 py-1.5 rounded-lg transition active:scale-95">aLtErNaTiNg cAsE</button>
+                        <button onclick="changeCaseEmail('title')" class="text-xs theme-card border hover:border-sky-500 theme-text-main px-3 py-1.5 rounded-lg transition active:scale-95">Title Case</button>
+                        <button onclick="changeCaseEmail('inverse')" class="text-xs theme-card border hover:border-sky-500 theme-text-main px-3 py-1.5 rounded-lg transition active:scale-95">InVeRsE CaSe</button>
+                    </div>
+                </div>
+
+                <!-- Action Buttons Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                    <button id="btn-decode" onclick="processEmail('decode')" class="action-btn theme-card hover:bg-teal-600/20 hover:border-teal-500 hover:text-teal-300 theme-text-main font-medium py-3 px-3 rounded-xl transition border active:scale-95 flex items-center justify-center gap-2 text-xs">
+                        <i class="fa-solid fa-key"></i> Universal Decode
+                    </button>
+                    <button id="btn-encode-stricthex" onclick="processEmail('encode-stricthex')" class="action-btn theme-card hover:bg-emerald-600/20 hover:border-emerald-500 hover:text-emerald-300 theme-text-main font-medium py-3 px-3 rounded-xl transition border active:scale-95 flex items-center justify-center gap-2 text-xs">
+                        <i class="fa-solid fa-lock"></i> Strict Hex
+                    </button>
+                    <button id="btn-encode-ascii" onclick="processEmail('encode-ascii')" class="action-btn theme-card hover:bg-rose-600/20 hover:border-rose-500 hover:text-rose-300 theme-text-main font-medium py-3 px-3 rounded-xl transition border active:scale-95 flex items-center justify-center gap-2 text-xs">
+                        <i class="fa-solid fa-font"></i> ASCII QP Header
+                    </button>
+                    <button id="btn-encode-b64" onclick="processEmail('encode-b64')" class="action-btn theme-card hover:bg-blue-600/20 hover:border-blue-500 hover:text-blue-300 theme-text-main font-medium py-3 px-3 rounded-xl transition border active:scale-95 flex items-center justify-center gap-2 text-xs">
+                        <i class="fa-solid fa-hashtag"></i> UTF-8 Base64
+                    </button>
+                    <button id="btn-encode-qp" onclick="processEmail('encode-qp')" class="action-btn theme-card hover:bg-purple-600/20 hover:border-purple-500 hover:text-purple-300 theme-text-main font-medium py-3 px-3 rounded-xl transition border active:scale-95 flex items-center justify-center gap-2 text-xs">
+                        <i class="fa-solid fa-code"></i> UTF-8 QP
+                    </button>
+                    <button id="btn-encode-utf32" onclick="processEmail('encode-utf32')" class="action-btn theme-card hover:bg-amber-600/20 hover:border-amber-500 hover:text-amber-300 theme-text-main font-medium py-3 px-3 rounded-xl transition border active:scale-95 flex items-center justify-center gap-2 text-xs">
+                        <i class="fa-solid fa-layer-group"></i> UTF-32 Base64
+                    </button>
+                </div>
+
+                <!-- Result Output -->
+                <div>
+                    <div class="flex justify-between items-center mb-2">
+                        <label class="text-xs font-semibold theme-text-muted uppercase tracking-wider">Result Output</label>
+                        <button onclick="copyOutputEmail()" class="text-xs text-emerald-400 hover:text-emerald-300 transition flex items-center gap-1">
+                            <i class="fa-regular fa-copy"></i> <span id="copyBtnTextEmail">Copy</span>
+                        </button>
+                    </div>
+                    <textarea id="outputTextEmail" rows="4" readonly 
+                        class="w-full theme-input border rounded-xl p-3.5 text-emerald-400 font-mono text-xs sm:text-sm focus:outline-none custom-scrollbar"
+                        placeholder="Output will appear here..."></textarea>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ==========================================================================
+             PORTAL 2: BULK DOMAIN DNS RECORD CHECKER
+             ========================================================================== -->
+        <section id="portal-dns" class="portal-section hidden space-y-6 w-full">
+            <div class="border-b theme-border pb-3 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                    <h2 class="text-xl font-bold theme-text-main flex items-center gap-2">
+                        <i class="fa-solid fa-network-wired text-emerald-400"></i> Bulk Domain DNS & Public Status Checker
+                    </h2>
+                    <p class="text-xs theme-text-muted mt-1">Real-time DNS Records, SSL Status, Public Status, and WHOIS Registrant Details Fetcher.</p>
+                </div>
+                <div class="flex items-center gap-2 flex-wrap">
+                    <button onclick="copyAllDnsResults()" class="px-3.5 py-2 theme-card hover:opacity-80 text-emerald-400 font-semibold text-xs rounded-xl border shadow transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-copy"></i> Copy All
+                    </button>
+                    <button onclick="exportDnsCSV()" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold text-xs rounded-xl shadow transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-file-csv"></i> Export CSV
+                    </button>
+                </div>
+            </div>
+
+            <!-- Input Box -->
+            <div class="theme-card border p-4 rounded-2xl shadow-xl space-y-3">
+                <label class="block text-xs font-semibold text-emerald-400 uppercase tracking-wider">
+                    Domain Names (One per line or comma separated):
+                </label>
+                <textarea id="dnsDomainInput" rows="4" class="w-full p-3 text-xs theme-input border rounded-xl focus:ring-1 focus:ring-emerald-500 outline-none font-mono placeholder-slate-500 custom-scrollbar" placeholder="google.com&#10;dnsimple.com&#10;github.com"></textarea>
+                
+                <div class="flex flex-wrap items-center justify-between gap-3 pt-1">
+                    <div class="flex items-center gap-3 text-xs">
+                        <button onclick="loadDnsSample()" class="text-emerald-400 hover:underline flex items-center gap-1">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i> Load Sample Domains
+                        </button>
+                        <span class="theme-text-muted">|</span>
+                        <button onclick="clearDnsAll()" class="text-rose-400 hover:underline flex items-center gap-1">
+                            <i class="fa-solid fa-trash"></i> Clear
+                        </button>
+                    </div>
+                    <button id="btnFetchDns" onclick="startDnsCheck()" class="px-5 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs rounded-xl shadow transition flex items-center gap-2">
+                        <i class="fa-solid fa-magnifying-glass"></i> Check Records & Status
+                    </button>
+                </div>
+            </div>
+
+            <!-- Column Toggles -->
+            <div class="theme-card border p-4 rounded-2xl shadow-md space-y-3">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-semibold theme-text-muted uppercase tracking-wider">Columns to Display:</span>
+                    <button onclick="toggleSelectAllDnsColumns()" class="px-2.5 py-1 theme-card hover:opacity-80 text-emerald-400 font-semibold text-[11px] rounded-lg border flex items-center gap-1.5">
+                        <i id="selectAllDnsIcon" class="fa-solid fa-square-check"></i> <span id="selectAllDnsText">Deselect All</span>
+                    </button>
+                </div>
+                
+                <div class="flex flex-wrap gap-2 text-xs" id="columnToggles">
+                    <label class="inline-flex items-center theme-input px-2.5 py-1.5 rounded-lg border cursor-pointer">
+                        <input type="checkbox" id="chk-col-a" checked onchange="toggleDnsColumn('col-a')" class="rounded border-slate-700 text-emerald-500 me-2 dns-col-checkbox"> A record
+                    </label>
+                    <label class="inline-flex items-center theme-input px-2.5 py-1.5 rounded-lg border cursor-pointer">
+                        <input type="checkbox" id="chk-col-txt" checked onchange="toggleDnsColumn('col-txt')" class="rounded border-slate-700 text-emerald-500 me-2 dns-col-checkbox"> TXT / SPF
+                    </label>
+                    <label class="inline-flex items-center theme-input px-2.5 py-1.5 rounded-lg border cursor-pointer">
+                        <input type="checkbox" id="chk-col-dmarc" checked onchange="toggleDnsColumn('col-dmarc')" class="rounded border-slate-700 text-emerald-500 me-2 dns-col-checkbox"> DMARC
+                    </label>
+                    <label class="inline-flex items-center theme-input px-2.5 py-1.5 rounded-lg border cursor-pointer">
+                        <input type="checkbox" id="chk-col-bimi" checked onchange="toggleDnsColumn('col-bimi')" class="rounded border-slate-700 text-emerald-500 me-2 dns-col-checkbox"> BIMI
+                    </label>
+                    <label class="inline-flex items-center theme-input px-2.5 py-1.5 rounded-lg border cursor-pointer">
+                        <input type="checkbox" id="chk-col-cname" checked onchange="toggleDnsColumn('col-cname')" class="rounded border-slate-700 text-emerald-500 me-2 dns-col-checkbox"> C NAME
+                    </label>
+                    <label class="inline-flex items-center theme-input px-2.5 py-1.5 rounded-lg border cursor-pointer">
+                        <input type="checkbox" id="chk-col-ns" checked onchange="toggleDnsColumn('col-ns')" class="rounded border-slate-700 text-emerald-500 me-2 dns-col-checkbox"> NS
+                    </label>
+                    <label class="inline-flex items-center theme-input px-2.5 py-1.5 rounded-lg border cursor-pointer">
+                        <input type="checkbox" id="chk-col-soa" checked onchange="toggleDnsColumn('col-soa')" class="rounded border-slate-700 text-emerald-500 me-2 dns-col-checkbox"> SOA
+                    </label>
+                    <label class="inline-flex items-center theme-input px-2.5 py-1.5 rounded-lg border cursor-pointer">
+                        <input type="checkbox" id="chk-col-mx" checked onchange="toggleDnsColumn('col-mx')" class="rounded border-slate-700 text-emerald-500 me-2 dns-col-checkbox"> MX
+                    </label>
+                    <label class="inline-flex items-center theme-input px-2.5 py-1.5 rounded-lg border cursor-pointer text-emerald-400 font-semibold">
+                        <input type="checkbox" id="chk-col-ssl" checked onchange="toggleDnsColumn('col-ssl')" class="rounded border-slate-700 text-emerald-500 me-2 dns-col-checkbox"> SSL Status
+                    </label>
+                    <label class="inline-flex items-center theme-input px-2.5 py-1.5 rounded-lg border cursor-pointer">
+                        <input type="checkbox" id="chk-col-registrar" checked onchange="toggleDnsColumn('col-registrar')" class="rounded border-slate-700 text-emerald-500 me-2 dns-col-checkbox"> Registrar
+                    </label>
+                    <label class="inline-flex items-center theme-input px-2.5 py-1.5 rounded-lg border cursor-pointer">
+                        <input type="checkbox" id="chk-col-created" checked onchange="toggleDnsColumn('col-created')" class="rounded border-slate-700 text-emerald-500 me-2 dns-col-checkbox"> Creation Date
+                    </label>
+                    <label class="inline-flex items-center theme-input px-2.5 py-1.5 rounded-lg border cursor-pointer">
+                        <input type="checkbox" id="chk-col-expiry" checked onchange="toggleDnsColumn('col-expiry')" class="rounded border-slate-700 text-emerald-500 me-2 dns-col-checkbox"> Expiry Date
+                    </label>
+                    <label class="inline-flex items-center theme-input px-2.5 py-1.5 rounded-lg border cursor-pointer">
+                        <input type="checkbox" id="chk-col-age" checked onchange="toggleDnsColumn('col-age')" class="rounded border-slate-700 text-emerald-500 me-2 dns-col-checkbox"> Domain Age
+                    </label>
+                    <label class="inline-flex items-center theme-input px-2.5 py-1.5 rounded-lg border cursor-pointer">
+                        <input type="checkbox" id="chk-col-public-status" checked onchange="toggleDnsColumn('col-public-status')" class="rounded border-slate-700 text-emerald-500 me-2 dns-col-checkbox"> Public Status
+                    </label>
+                    <label class="inline-flex items-center theme-input px-2.5 py-1.5 rounded-lg border cursor-pointer text-emerald-400 font-semibold">
+                        <input type="checkbox" id="chk-col-org-name" checked onchange="toggleDnsColumn('col-org-name')" class="rounded border-slate-700 text-emerald-500 me-2 dns-col-checkbox"> Registrant Name & Address
+                    </label>
+                </div>
+            </div>
+
+            <!-- Table Results Grid -->
+            <div class="theme-card border rounded-2xl shadow-xl overflow-hidden">
+                <div class="overflow-x-auto min-h-[350px] custom-scrollbar">
+                    <table class="w-full text-left text-xs sheet-table" id="dnsResultsTable">
+                        <thead>
+                            <tr class="theme-sidebar font-bold border-b text-emerald-400">
+                                <th onclick="sortDnsTable('domain')" class="p-3 min-w-[180px] sticky left-0 z-20 theme-sidebar cursor-pointer hover:opacity-80">Domain <span id="sort-domain">▲</span></th>
+                                <th onclick="sortDnsTable('a')" class="p-3 col-a min-w-[150px] cursor-pointer hover:opacity-80">A record <span id="sort-a"></span></th>
+                                <th onclick="sortDnsTable('txt')" class="p-3 col-txt min-w-[200px] cursor-pointer hover:opacity-80">TXT / SPF <span id="sort-txt"></span></th>
+                                <th onclick="sortDnsTable('dmarc')" class="p-3 col-dmarc min-w-[220px] cursor-pointer hover:opacity-80">DMARC <span id="sort-dmarc"></span></th>
+                                <th onclick="sortDnsTable('bimi')" class="p-3 col-bimi min-w-[220px] cursor-pointer hover:opacity-80">BIMI <span id="sort-bimi"></span></th>
+                                <th onclick="sortDnsTable('cname')" class="p-3 col-cname min-w-[160px] cursor-pointer hover:opacity-80">C NAME <span id="sort-cname"></span></th>
+                                <th onclick="sortDnsTable('ns')" class="p-3 col-ns min-w-[160px] cursor-pointer hover:opacity-80">NS <span id="sort-ns"></span></th>
+                                <th onclick="sortDnsTable('soa')" class="p-3 col-soa min-w-[180px] cursor-pointer hover:opacity-80">SOA <span id="sort-soa"></span></th>
+                                <th onclick="sortDnsTable('mx')" class="p-3 col-mx min-w-[160px] cursor-pointer hover:opacity-80">MX <span id="sort-mx"></span></th>
+                                <th onclick="sortDnsTable('ssl')" class="p-3 col-ssl min-w-[160px] cursor-pointer hover:opacity-80">SSL Status <span id="sort-ssl"></span></th>
+                                <th onclick="sortDnsTable('registrar')" class="p-3 col-registrar min-w-[150px] cursor-pointer hover:opacity-80">Registrar <span id="sort-registrar"></span></th>
+                                <th onclick="sortDnsTable('created')" class="p-3 col-created min-w-[130px] cursor-pointer hover:opacity-80">Creation Date <span id="sort-created"></span></th>
+                                <th onclick="sortDnsTable('expiry')" class="p-3 col-expiry min-w-[130px] cursor-pointer hover:opacity-80">Expiry Date <span id="sort-expiry"></span></th>
+                                <th onclick="sortDnsTable('ageDays')" class="p-3 col-age min-w-[140px] cursor-pointer hover:opacity-80">Domain Age <span id="sort-ageDays"></span></th>
+                                <th onclick="sortDnsTable('status')" class="p-3 col-public-status min-w-[160px] cursor-pointer hover:opacity-80">Public Status <span id="sort-status"></span></th>
+                                <th onclick="sortDnsTable('registrantDetails')" class="p-3 col-org-name min-w-[220px] cursor-pointer hover:opacity-80">Registrant Details <span id="sort-registrantDetails"></span></th>
+                            </tr>
+                        </thead>
+                        <tbody id="dnsResultsTableBody" class="font-mono">
+                            <tr>
+                                <td colspan="16" class="text-center py-16 theme-text-muted font-sans">
+                                    <i class="fa-solid fa-table text-4xl mb-3 block opacity-40"></i>
+                                    Enter domain names above and click <span class="text-emerald-400 font-semibold">"Check Records & Status"</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ==========================================================================
+             PORTAL 3: RANDOM WORD GENERATOR
+             ========================================================================== -->
+        <section id="portal-words" class="portal-section hidden space-y-6 w-full">
+            <div class="border-b theme-border pb-3 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                    <h2 class="text-xl font-bold theme-text-main flex items-center gap-2">
+                        <i class="fa-solid fa-shuffle text-amber-400"></i> Random Word & Letter Generator
+                    </h2>
+                    <p class="text-xs theme-text-muted mt-1">Generate unique random strings, words, or pronounceable character sets without repetition.</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <!-- Controls Panel -->
+                <div class="lg:col-span-5 theme-card border p-5 rounded-2xl shadow-xl space-y-5 h-fit">
+                    <div class="border-b theme-border pb-3">
+                        <h3 class="text-sm font-semibold theme-text-main flex items-center gap-2">
+                            <i class="fa-solid fa-sliders text-amber-400"></i> Generator Options
+                        </h3>
+                    </div>
+
+                    <!-- Sliders -->
+                    <div class="space-y-4">
+                        <div>
+                            <div class="flex justify-between items-center mb-1">
+                                <label for="wordCount" class="text-xs font-semibold theme-text-main">Total Words Count</label>
+                                <span id="wordCountValue" class="text-xs font-bold text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">12</span>
+                            </div>
+                            <input type="range" id="wordCount" min="1" max="1000" value="12" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-amber-500">
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between items-center mb-1">
+                                <label for="letterCount" class="text-xs font-semibold theme-text-main">Letters per Word</label>
+                                <span id="letterCountValue" class="text-xs font-bold text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">6</span>
+                            </div>
+                            <input type="range" id="letterCount" min="1" max="30" value="6" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-amber-500">
+                        </div>
+                    </div>
+
+                    <!-- Character Toggles -->
+                    <div class="space-y-2 pt-1">
+                        <span class="text-xs font-semibold theme-text-muted uppercase tracking-wider block">Character Options</span>
+                        <div class="grid grid-cols-2 gap-2 text-xs">
+                            <label class="flex items-center space-x-2 p-2.5 rounded-xl border theme-input cursor-pointer">
+                                <input type="checkbox" id="includeLower" checked class="rounded border-slate-700 text-amber-500 focus:ring-amber-500">
+                                <span>a-z (lowercase)</span>
+                            </label>
+
+                            <label class="flex items-center space-x-2 p-2.5 rounded-xl border theme-input cursor-pointer">
+                                <input type="checkbox" id="includeUpper" checked class="rounded border-slate-700 text-amber-500 focus:ring-amber-500">
+                                <span>A-Z (Uppercase)</span>
+                            </label>
+
+                            <label class="flex items-center space-x-2 p-2.5 rounded-xl border theme-input cursor-pointer">
+                                <input type="checkbox" id="includeNumbers" class="rounded border-slate-700 text-amber-500 focus:ring-amber-500">
+                                <span>0-9 (Numbers)</span>
+                            </label>
+
+                            <label class="flex items-center space-x-2 p-2.5 rounded-xl border theme-input cursor-pointer">
+                                <input type="checkbox" id="includeSymbols" class="rounded border-slate-700 text-amber-500 focus:ring-amber-500">
+                                <span>!@#$ (Symbols)</span>
+                            </label>
+                        </div>
+
+                        <label class="flex items-center space-x-2 p-2.5 rounded-xl border border-amber-500/30 bg-amber-500/10 cursor-pointer text-xs text-amber-400 font-medium">
+                            <input type="checkbox" id="readableMode" class="rounded border-slate-700 text-amber-500 focus:ring-amber-500">
+                            <span>Pronounceable Style (Readable words)</span>
+                        </label>
+                    </div>
+
+                    <button onclick="generateUniqueWords()" class="w-full py-3 px-4 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-xl shadow-lg transition duration-150 flex items-center justify-center gap-2 text-xs">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        <span>Generate Words</span>
+                    </button>
+                </div>
+
+                <!-- Display Results -->
+                <div class="lg:col-span-7 theme-card border p-5 rounded-2xl shadow-xl flex flex-col min-h-[460px]">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b theme-border pb-3">
+                        <div>
+                            <h3 class="text-xs font-semibold theme-text-muted uppercase tracking-wider">Generated Output</h3>
+                            <p class="text-[11px] theme-text-muted mt-0.5">
+                                Total: <span id="wordsResultCount" class="font-bold text-amber-400">0</span> unique words
+                            </p>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="relative w-36">
+                                <input type="text" id="searchWordsInput" placeholder="Search..." class="w-full pl-7 pr-2 py-1 text-xs theme-input border rounded-lg focus:outline-none focus:ring-1 focus:ring-amber-500">
+                                <i class="fa-solid fa-magnifying-glass theme-text-muted text-[10px] absolute left-2.5 top-2"></i>
+                            </div>
+                            <button onclick="copyAllWords()" class="px-3 py-1 theme-card border hover:opacity-80 text-xs rounded-lg transition font-medium flex items-center gap-1">
+                                <i class="fa-regular fa-copy"></i> Copy All
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Output Grid -->
+                    <div class="flex-1 mt-4">
+                        <div id="wordsDisplayContainer" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 max-h-[480px] overflow-y-auto custom-scrollbar p-1">
+                            <div class="col-span-full py-20 text-center theme-text-muted text-xs">
+                                <i class="fa-solid fa-font text-4xl mb-3 opacity-30"></i>
+                                <p class="text-xs">Click "Generate Words" to produce list</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Toast Banner -->
+    <div id="toast" class="fixed bottom-5 right-5 theme-card border px-4 py-3 rounded-xl shadow-2xl flex items-center space-x-3 pointer-events-none opacity-0 translate-y-4 transition-all duration-300 z-50">
+        <div id="toastIcon" class="text-emerald-400">
+            <i class="fa-solid fa-circle-check"></i>
+        </div>
+        <div id="toastMsg" class="text-xs font-semibold theme-text-main">Action Executed Successfully</div>
+    </div>
+
+    <script>
+        // Disable Context Menu Globally
+        document.addEventListener('contextmenu', (e) => e.preventDefault());
+
+        /* --------------------------------------------------------------------------
+           1. PORTAL SWITCHING & DYNAMIC THEME ENGINE
+           -------------------------------------------------------------------------- */
+        function switchPortal(portalId) {
+            document.querySelectorAll('.portal-section').forEach(p => p.classList.add('hidden'));
+
+            document.querySelectorAll('.nav-item').forEach(btn => {
+                btn.className = "nav-item w-full flex items-center space-x-3 px-3.5 py-3 rounded-xl text-xs font-semibold transition-all duration-200 theme-text-muted hover:bg-slate-800/40 border border-transparent";
+            });
+
+            const activePortal = document.getElementById(`portal-${portalId}`);
+            if (activePortal) activePortal.classList.remove('hidden');
+
+            const activeBtn = document.getElementById(`nav-btn-${portalId}`);
+            if (activeBtn) {
+                activeBtn.className = "nav-item w-full flex items-center space-x-3 px-3.5 py-3 rounded-xl text-xs font-semibold transition-all duration-200 bg-indigo-600 text-white shadow-lg";
+            }
+        }
+
+        function toggleGlobalTheme() {
+            const body = document.getElementById('appBody');
+            const icon = document.getElementById('themeToggleIcon');
+            const isLight = body.classList.toggle('light-theme');
+
+            icon.className = isLight ? 'fa-solid fa-moon text-indigo-600 text-sm' : 'fa-solid fa-sun text-amber-400 text-sm';
+            showToast(isLight ? 'Light Theme Activated' : 'Dark Theme Activated');
+        }
+
+        function showToast(msg, type = "success") {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toastMsg');
+            const toastIcon = document.getElementById('toastIcon');
+
+            toastMsg.innerText = msg;
+            if (type === "warning") {
+                toastIcon.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-amber-400"></i>`;
+            } else if (type === "error") {
+                toastIcon.innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-400"></i>`;
+            } else {
+                toastIcon.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-400"></i>`;
+            }
+
+            toast.classList.remove('opacity-0', 'translate-y-4', 'pointer-events-none');
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-4', 'pointer-events-none');
+            }, 2200);
+        }
+
+        function copyTextToClipboard(text) {
+            const textarea = document.createElement("textarea");
+            textarea.value = text;
+            textarea.style.position = "fixed";
+            textarea.style.opacity = "0";
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand("copy");
+            document.body.removeChild(textarea);
+        }
+
+        /* --------------------------------------------------------------------------
+           2. EMAIL SUBJECT CONVERTER LOGIC
+           -------------------------------------------------------------------------- */
+        function changeCaseEmail(type) {
+            const input = document.getElementById('inputTextEmail');
+            let text = input.value;
+            if (!text) return;
+
+            if (type === 'sentence') {
+                text = text.toLowerCase().replace(/(^\s*\w|[\.\?!\n]\s*\w)/g, c => c.toUpperCase());
+            } else if (type === 'lower') {
+                text = text.toLowerCase();
+            } else if (type === 'upper') {
+                text = text.toUpperCase();
+            } else if (type === 'capitalized') {
+                text = text.toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
+            } else if (type === 'alternating') {
+                text = text.split('').map((c, i) => i % 2 === 0 ? c.toLowerCase() : c.toUpperCase()).join('');
+            } else if (type === 'title') {
+                const minorWords = ['a', 'an', 'and', 'as', 'at', 'but', 'by', 'for', 'in', 'nor', 'of', 'on', 'or', 'so', 'the', 'to', 'up', 'yet'];
+                text = text.toLowerCase().split(' ').map((word, index) => {
+                    if (index > 0 && minorWords.includes(word)) return word;
+                    return word.charAt(0).toUpperCase() + word.slice(1);
+                }).join(' ');
+            } else if (type === 'inverse') {
+                text = text.split('').map(c => c === c.toUpperCase() ? c.toLowerCase() : c.toUpperCase()).join('');
+            }
+
+            input.value = text;
+        }
+
+        function processEmail(mode) {
+            const input = document.getElementById('inputTextEmail').value;
+            const outputField = document.getElementById('outputTextEmail');
+
+            highlightActiveEmailBtn(mode);
+
+            if (!input) {
+                outputField.value = "Error: Please enter text in the input box first.";
+                return;
+            }
+
+            try {
+                if (mode === 'decode') outputField.value = decodeMimeSubject(input);
+                else if (mode === 'encode-stricthex') outputField.value = encodeStrictHexSubject(input);
+                else if (mode === 'encode-ascii') outputField.value = encodeASCIISubject(input);
+                else if (mode === 'encode-b64') outputField.value = encodeBase64Subject(input);
+                else if (mode === 'encode-qp') outputField.value = encodeQPSubject(input);
+                else if (mode === 'encode-utf32') outputField.value = encodeUTF32Subject(input);
+            } catch (err) {
+                outputField.value = "Error parsing string. Please check input format.";
+            }
+        }
+
+        function highlightActiveEmailBtn(mode) {
+            const btnMap = {
+                'decode': 'btn-decode',
+                'encode-stricthex': 'btn-encode-stricthex',
+                'encode-ascii': 'btn-encode-ascii',
+                'encode-b64': 'btn-encode-b64',
+                'encode-qp': 'btn-encode-qp',
+                'encode-utf32': 'btn-encode-utf32'
+            };
+
+            Object.values(btnMap).forEach(id => {
+                const btn = document.getElementById(id);
+                if (btn) btn.classList.remove('btn-selected-decode', 'btn-selected-stricthex', 'btn-selected-ascii', 'btn-selected-b64', 'btn-selected-qp', 'btn-selected-utf32');
+            });
+
+            const activeBtn = document.getElementById(btnMap[mode]);
+            if (activeBtn) {
+                const classMap = {
+                    'decode': 'btn-selected-decode',
+                    'encode-stricthex': 'btn-selected-stricthex',
+                    'encode-ascii': 'btn-selected-ascii',
+                    'encode-b64': 'btn-selected-b64',
+                    'encode-qp': 'btn-selected-qp',
+                    'encode-utf32': 'btn-selected-utf32'
+                };
+                activeBtn.classList.add(classMap[mode]);
+            }
+        }
+
+        function decodeMimeSubject(text) {
+            let src = text.trim();
+            const regex = /=\?([^?]+)\?([BQbq])\?([^?]+)\?=/g;
+            if (regex.test(src)) {
+                return src.replace(/=\?([^?]+)\?([BQbq])\?([^?]+)\?=/g, (match, charset, encoding, data) => {
+                    const enc = encoding.toUpperCase();
+                    const cs = charset.toUpperCase();
+
+                    if (enc === 'B') {
+                        const binary = atob(data);
+                        const bytes = Uint8Array.from(binary, char => char.charCodeAt(0));
+
+                        if (cs.includes('UTF-32')) {
+                            let result = '';
+                            for (let i = 0; i < bytes.length; i += 4) {
+                                const codePoint = (bytes[i] << 24) | (bytes[i + 1] << 16) | (bytes[i + 2] << 8) | bytes[i + 3];
+                                result += String.fromCodePoint(codePoint);
+                            }
+                            return result;
+                        } else {
+                            return new TextDecoder(charset).decode(bytes);
+                        }
+                    } else if (enc === 'Q') {
+                        let qpDecoded = data.replace(/_/g, ' ');
+                        qpDecoded = qpDecoded.replace(/=([0-9A-Fa-f]{2})/g, (_, hex) => String.fromCharCode(parseInt(hex, 16)));
+                        const bytes = Uint8Array.from(qpDecoded, char => char.charCodeAt(0));
+                        return new TextDecoder(charset).decode(bytes);
+                    }
+                    return match;
+                });
+            }
+
+            let qpDecoded = src.replace(/_/g, ' ');
+            qpDecoded = qpDecoded.replace(/=([0-9A-Fa-f]{2})/g, (_, hex) => String.fromCharCode(parseInt(hex, 16)));
+            const bytes = Uint8Array.from(qpDecoded, char => char.charCodeAt(0));
+            return new TextDecoder('utf-8').decode(bytes);
+        }
+
+        function encodeStrictHexSubject(text) {
+            const bytes = new TextEncoder().encode(text);
+            let hexStr = '';
+            bytes.forEach(byte => { hexStr += '=' + byte.toString(16).toUpperCase().padStart(2, '0'); });
+            return `=?utf-8?q?${hexStr}?=`;
+        }
+
+        function encodeASCIISubject(text) {
+            let qp = '';
+            for (let i = 0; i < text.length; i++) {
+                const code = text.charCodeAt(i);
+                if (code > 127) qp += '=' + code.toString(16).toUpperCase().padStart(2, '0');
+                else if (code === 32) qp += '_';
+                else if ((code >= 48 && code <= 57) || (code >= 65 && code <= 90) || (code >= 97 && code <= 122)) qp += text.charAt(i);
+                else qp += '=' + code.toString(16).toUpperCase().padStart(2, '0');
+            }
+            return `=?us-ascii?Q?${qp}?=`;
+        }
+
+        function encodeBase64Subject(text) {
+            const bytes = new TextEncoder().encode(text);
+            let binary = '';
+            bytes.forEach(b => binary += String.fromCharCode(b));
+            return `=?UTF-8?B?${btoa(binary)}?=`;
+        }
+
+        function encodeQPSubject(text) {
+            const bytes = new TextEncoder().encode(text);
+            let qp = '';
+            bytes.forEach(byte => {
+                if (byte === 32) qp += '_';
+                else if ((byte >= 48 && byte <= 57) || (byte >= 65 && byte <= 90) || (byte >= 97 && byte <= 122)) qp += String.fromCharCode(byte);
+                else qp += '=' + byte.toString(16).toUpperCase().padStart(2, '0');
+            });
+            return `=?UTF-8?Q?${qp}?=`;
+        }
+
+        function encodeUTF32Subject(text) {
+            const codePoints = Array.from(text).map(c => c.codePointAt(0));
+            const bytes = new Uint8Array(codePoints.length * 4);
+            codePoints.forEach((cp, index) => {
+                const offset = index * 4;
+                bytes[offset]     = (cp >> 24) & 0xFF;
+                bytes[offset + 1] = (cp >> 16) & 0xFF;
+                bytes[offset + 2] = (cp >> 8)  & 0xFF;
+                bytes[offset + 3] = cp & 0xFF;
+            });
+            let binary = '';
+            bytes.forEach(b => binary += String.fromCharCode(b));
+            return `=?UTF-32?B?${btoa(binary)}?=`;
+        }
+
+        function copyOutputEmail() {
+            const output = document.getElementById('outputTextEmail');
+            if (!output.value) return;
+            copyTextToClipboard(output.value);
+            showToast("Result copied to clipboard!");
+        }
+
+        async function pasteInputEmail() {
+            const inputField = document.getElementById('inputTextEmail');
+            try {
+                if (navigator.clipboard && navigator.clipboard.readText) {
+                    inputField.value = await navigator.clipboard.readText();
+                } else {
+                    showToast("Press Ctrl+V / Cmd+V to paste manually", "warning");
+                }
+            } catch (err) {
+                showToast("Press Ctrl+V / Cmd+V to paste manually", "warning");
+            }
+        }
+
+        /* --------------------------------------------------------------------------
+           3. BULK DOMAIN DNS CHECKER LOGIC
+           -------------------------------------------------------------------------- */
+        let dnsResultsStore = [];
+        let dnsSortCol = 'domain';
+        let dnsSortAsc = true;
+        let allDnsColsSelected = true;
+
+        function loadDnsSample() {
+            document.getElementById('dnsDomainInput').value = "google.com\ndnsimple.com\ngithub.com";
+        }
+
+        function clearDnsAll() {
+            document.getElementById('dnsDomainInput').value = '';
+            document.getElementById('dnsResultsTableBody').innerHTML = `
+                <tr>
+                    <td colspan="16" class="text-center py-16 theme-text-muted font-sans">
+                        <i class="fa-solid fa-table text-4xl mb-3 block opacity-40"></i>
+                        Enter domain names above and click <span class="text-emerald-400 font-semibold">"Check Records & Status"</span>
+                    </td>
+                </tr>`;
+            dnsResultsStore = [];
+        }
+
+        function toggleDnsColumn(className) {
+            document.querySelectorAll('.' + className).forEach(el => el.classList.toggle('hidden'));
+        }
+
+        function toggleSelectAllDnsColumns() {
+            allDnsColsSelected = !allDnsColsSelected;
+            document.querySelectorAll('.dns-col-checkbox').forEach(chk => chk.checked = allDnsColsSelected);
+            const cols = ['col-a', 'col-txt', 'col-dmarc', 'col-bimi', 'col-cname', 'col-ns', 'col-soa', 'col-mx', 'col-ssl', 'col-registrar', 'col-created', 'col-expiry', 'col-age', 'col-public-status', 'col-org-name'];
+            
+            cols.forEach(c => {
+                document.querySelectorAll('.' + c).forEach(el => {
+                    if (allDnsColsSelected) el.classList.remove('hidden');
+                    else el.classList.add('hidden');
+                });
+            });
+
+            document.getElementById('selectAllDnsIcon').className = allDnsColsSelected ? 'fa-solid fa-square-check' : 'fa-regular fa-square';
+            document.getElementById('selectAllDnsText').textContent = allDnsColsSelected ? 'Deselect All' : 'Select All';
+        }
+
+        async function startDnsCheck() {
+            const input = document.getElementById('dnsDomainInput').value.trim();
+            if (!input) {
+                showToast("Enter domain names first", "warning");
+                return;
+            }
+
+            const domains = [...new Set(input.split(/[\n,]+/).map(d => d.trim().toLowerCase().replace(/^https?:\/\//, '').replace(/\/.*$/, '')).filter(Boolean))];
+            const tbody = document.getElementById('dnsResultsTableBody');
+            tbody.innerHTML = '';
+            dnsResultsStore = [];
+
+            for (const domain of domains) {
+                const rowId = 'row-' + domain.replace(/[^a-z0-9]/g, '-');
+                const row = document.createElement('tr');
+                row.id = rowId;
+                row.className = 'theme-row transition';
+                row.innerHTML = `
+                    <td class="p-3 font-semibold sticky left-0 z-10 theme-sidebar theme-text-main min-w-[180px]">${domain}</td>
+                    <td class="p-3 col-a"><i class="fa-solid fa-circle-notch fa-spin theme-text-muted"></i></td>
+                    <td class="p-3 col-txt"><i class="fa-solid fa-circle-notch fa-spin theme-text-muted"></i></td>
+                    <td class="p-3 col-dmarc"><i class="fa-solid fa-circle-notch fa-spin theme-text-muted"></i></td>
+                    <td class="p-3 col-bimi"><i class="fa-solid fa-circle-notch fa-spin theme-text-muted"></i></td>
+                    <td class="p-3 col-cname"><i class="fa-solid fa-circle-notch fa-spin theme-text-muted"></i></td>
+                    <td class="p-3 col-ns"><i class="fa-solid fa-circle-notch fa-spin theme-text-muted"></i></td>
+                    <td class="p-3 col-soa"><i class="fa-solid fa-circle-notch fa-spin theme-text-muted"></i></td>
+                    <td class="p-3 col-mx"><i class="fa-solid fa-circle-notch fa-spin theme-text-muted"></i></td>
+                    <td class="p-3 col-ssl"><i class="fa-solid fa-circle-notch fa-spin text-emerald-400"></i></td>
+                    <td class="p-3 col-registrar"><i class="fa-solid fa-circle-notch fa-spin theme-text-muted"></i></td>
+                    <td class="p-3 col-created"><i class="fa-solid fa-circle-notch fa-spin theme-text-muted"></i></td>
+                    <td class="p-3 col-expiry"><i class="fa-solid fa-circle-notch fa-spin theme-text-muted"></i></td>
+                    <td class="p-3 col-age"><i class="fa-solid fa-circle-notch fa-spin theme-text-muted"></i></td>
+                    <td class="p-3 col-public-status"><i class="fa-solid fa-circle-notch fa-spin text-emerald-400"></i></td>
+                    <td class="p-3 col-org-name"><i class="fa-solid fa-circle-notch fa-spin theme-text-muted"></i></td>
+                `;
+                tbody.appendChild(row);
+
+                fetchDnsDetails(domain, rowId);
+            }
+        }
+
+        async function fetchDnsDetails(domain, rowId) {
+            const row = document.getElementById(rowId);
+            if (!row) return;
+
+            const [aRec, txtRec, dmarcRec, bimiRec, cnameRec, nsRec, soaRec, mxRec, sslStatus, whoisData] = await Promise.all([
+                queryGoogleDNS(domain, 'A'),
+                queryGoogleDNS(domain, 'TXT'),
+                queryGoogleDNS('_dmarc.' + domain, 'TXT'),
+                queryGoogleDNS('default._bimi.' + domain, 'TXT'),
+                queryGoogleDNS(domain, 'CNAME'),
+                queryGoogleDNS(domain, 'NS'),
+                queryGoogleDNS(domain, 'SOA'),
+                queryGoogleDNS(domain, 'MX'),
+                checkSSLStatus(domain),
+                fetchWhoisData(domain)
+            ]);
+
+            row.querySelector('.col-a').innerHTML = formatCell(aRec);
+            row.querySelector('.col-txt').innerHTML = formatCell(txtRec);
+            row.querySelector('.col-dmarc').innerHTML = formatCell(dmarcRec);
+            row.querySelector('.col-bimi').innerHTML = formatCell(bimiRec);
+            row.querySelector('.col-cname').innerHTML = formatCell(cnameRec);
+            row.querySelector('.col-ns').innerHTML = formatCell(nsRec);
+            row.querySelector('.col-soa').innerHTML = formatCell(soaRec);
+            row.querySelector('.col-mx').innerHTML = formatCell(mxRec);
+            row.querySelector('.col-ssl').innerHTML = sslStatus 
+                ? `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">Active (SSL)</span>`
+                : `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-500/20 text-rose-400 border border-rose-500/30">No SSL</span>`;
+            row.querySelector('.col-registrar').innerHTML = formatCell(whoisData.registrar);
+            row.querySelector('.col-created').innerHTML = formatCell(whoisData.createdDate);
+            row.querySelector('.col-expiry').innerHTML = formatCell(whoisData.expiryDate);
+            row.querySelector('.col-age').innerHTML = formatCell(whoisData.ageStr);
+            row.querySelector('.col-public-status').innerHTML = whoisData.registered 
+                ? `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">Active</span>`
+                : `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-500/20 text-rose-400 border border-rose-500/30">Unregistered</span>`;
+            row.querySelector('.col-org-name').innerHTML = formatCell(whoisData.orgName !== 'N/A' ? whoisData.orgName : whoisData.registrantName);
+
+            dnsResultsStore.push({
+                domain,
+                a: aRec.join(', '),
+                txt: txtRec.join(' | '),
+                dmarc: dmarcRec.join(', '),
+                bimi: bimiRec.join(', '),
+                cname: cnameRec.join(', '),
+                ns: nsRec.join(', '),
+                soa: soaRec.join(', '),
+                mx: mxRec.join(', '),
+                ssl: sslStatus ? 'Active' : 'No SSL',
+                registrar: whoisData.registrar,
+                created: whoisData.createdDate,
+                expiry: whoisData.expiryDate,
+                ageStr: whoisData.ageStr,
+                ageDays: whoisData.ageDays,
+                status: whoisData.status,
+                registrantDetails: whoisData.orgName !== 'N/A' ? whoisData.orgName : whoisData.registrantName
+            });
+        }
+
+        async function queryGoogleDNS(domain, type) {
+            try {
+                const res = await fetch(`https://dns.google/resolve?name=${encodeURIComponent(domain)}&type=${type}`);
+                const data = await res.json();
+                if (data.Answer) return data.Answer.map(a => a.data);
+            } catch (e) {}
+            return [];
+        }
+
+        async function checkSSLStatus(domain) {
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 3500);
+                await fetch(`https://${domain}`, { method: 'HEAD', mode: 'no-cors', signal: controller.signal });
+                clearTimeout(timeoutId);
+                return true;
+            } catch (e) {
+                return false;
+            }
+        }
+
+        async function fetchWhoisData(domain) {
+            try {
+                const rootDomain = domain.split('.').slice(-2).join('.');
+                const res = await fetch(`https://rdap.org/domain/${rootDomain}`);
+                if (!res.ok) throw new Error('RDAP fetch error');
+                const data = await res.json();
+
+                let registrar = 'N/A', registrantName = 'N/A', orgName = 'N/A';
+                let createdDate = 'N/A', expiryDate = 'N/A', ageDays = 0, ageStr = 'N/A';
+
+                if (data.events) {
+                    const regEv = data.events.find(e => e.eventAction === 'registration');
+                    const expEv = data.events.find(e => e.eventAction === 'expiration');
+                    if (regEv) {
+                        const dt = new Date(regEv.eventDate);
+                        createdDate = dt.toISOString().split('T')[0];
+                        ageDays = Math.floor((new Date() - dt) / (1000 * 60 * 60 * 24));
+                        ageStr = `${Math.floor(ageDays / 365)} yrs ${ageDays % 365} days`;
+                    }
+                    if (expEv) expiryDate = new Date(expEv.eventDate).toISOString().split('T')[0];
+                }
+
+                if (data.entities) {
+                    const regEnt = data.entities.find(e => e.roles && e.roles.includes('registrar'));
+                    if (regEnt && regEnt.vcardArray) {
+                        const fn = regEnt.vcardArray[1].find(i => i[0] === 'fn');
+                        if (fn) registrar = fn[3];
+                    }
+                    const regiantEnt = data.entities.find(e => e.roles && (e.roles.includes('registrant') || e.roles.includes('administrative')));
+                    if (regiantEnt && regiantEnt.vcardArray) {
+                        const fn = regiantEnt.vcardArray[1].find(i => i[0] === 'fn');
+                        if (fn) registrantName = fn[3];
+                        const org = regiantEnt.vcardArray[1].find(i => i[0] === 'org');
+                        if (org) orgName = org[3];
+                    }
+                }
+
+                return { registrar, registered: true, createdDate, expiryDate, ageDays, ageStr, registrantName, orgName, status: 'Active' };
+            } catch (e) {
+                return { registrar: 'N/A', registered: false, createdDate: 'N/A', expiryDate: 'N/A', ageDays: 0, ageStr: 'N/A', registrantName: 'N/A', orgName: 'N/A', status: 'Unregistered' };
+            }
+        }
+
+        function formatCell(val) {
+            if (Array.isArray(val)) {
+                if (val.length === 0) return `<span class="theme-text-muted">-</span>`;
+                return val.map(v => `<div class="break-all theme-text-main mb-0.5">${v}</div>`).join('');
+            }
+            if (!val || val === 'N/A') return `<span class="theme-text-muted">-</span>`;
+            return `<div class="break-all theme-text-main">${val}</div>`;
+        }
+
+        function copyAllDnsResults() {
+            if (dnsResultsStore.length === 0) {
+                showToast("Check domains first!", "warning");
+                return;
+            }
+            const headers = "Domain\tA Record\tTXT\tMX\tSSL\tRegistrar\tAge";
+            const rows = dnsResultsStore.map(r => `${r.domain}\t${r.a}\t${r.txt}\t${r.mx}\t${r.ssl}\t${r.registrar}\t${r.ageStr}`).join('\n');
+            copyTextToClipboard(`${headers}\n${rows}`);
+            showToast("All DNS records copied to clipboard!");
+        }
+
+        function exportDnsCSV() {
+            if (dnsResultsStore.length === 0) {
+                showToast("Check domains first!", "warning");
+                return;
+            }
+            let csv = "Domain,A Record,TXT Record,MX Record,SSL Status,Registrar,Age\n";
+            dnsResultsStore.forEach(r => {
+                csv += `"${r.domain}","${r.a}","${r.txt}","${r.mx}","${r.ssl}","${r.registrar}","${r.ageStr}"\n`;
+            });
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `dns_records_${new Date().toISOString().slice(0,10)}.csv`;
+            link.click();
+            showToast("Exported CSV file!");
+        }
+
+        function sortDnsTable(key) {
+            if (dnsResultsStore.length === 0) return;
+            dnsSortAsc = (dnsSortCol === key) ? !dnsSortAsc : true;
+            dnsSortCol = key;
+
+            dnsResultsStore.sort((a, b) => {
+                let valA = a[key] || '', valB = b[key] || '';
+                if (valA < valB) return dnsSortAsc ? -1 : 1;
+                if (valA > valB) return dnsSortAsc ? 1 : -1;
+                return 0;
+            });
+
+            const tbody = document.getElementById('dnsResultsTableBody');
+            tbody.innerHTML = '';
+            dnsResultsStore.forEach(item => {
+                const row = document.createElement('tr');
+                row.className = "theme-row transition";
+                row.innerHTML = `
+                    <td class="p-3 font-semibold sticky left-0 z-10 theme-sidebar theme-text-main">${item.domain}</td>
+                    <td class="p-3 col-a">${formatCell(item.a)}</td>
+                    <td class="p-3 col-txt">${formatCell(item.txt)}</td>
+                    <td class="p-3 col-dmarc">${formatCell(item.dmarc)}</td>
+                    <td class="p-3 col-bimi">${formatCell(item.bimi)}</td>
+                    <td class="p-3 col-cname">${formatCell(item.cname)}</td>
+                    <td class="p-3 col-ns">${formatCell(item.ns)}</td>
+                    <td class="p-3 col-soa">${formatCell(item.soa)}</td>
+                    <td class="p-3 col-mx">${formatCell(item.mx)}</td>
+                    <td class="p-3 col-ssl">${item.ssl}</td>
+                    <td class="p-3 col-registrar">${formatCell(item.registrar)}</td>
+                    <td class="p-3 col-created">${formatCell(item.created)}</td>
+                    <td class="p-3 col-expiry">${formatCell(item.expiry)}</td>
+                    <td class="p-3 col-age">${formatCell(item.ageStr)}</td>
+                    <td class="p-3 col-public-status">${item.status}</td>
+                    <td class="p-3 col-org-name">${formatCell(item.registrantDetails)}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        /* --------------------------------------------------------------------------
+           4. RANDOM WORD GENERATOR LOGIC
+           -------------------------------------------------------------------------- */
+        const CHAR_LOWER = 'abcdefghijklmnopqrstuvwxyz';
+        const CHAR_UPPER = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        const CHAR_NUMBERS = '0123456789';
+        const CHAR_SYMBOLS = '!@#$%^&*()_+-=[]{}|;:,.<>?';
+        const VOWELS = 'aeiou';
+        const CONSONANTS = 'bcdfghjklmnpqrstvwxyz';
+
+        let generatedWordsList = [];
+
+        document.getElementById('wordCount').addEventListener('input', e => {
+            document.getElementById('wordCountValue').innerText = e.target.value;
+        });
+
+        document.getElementById('letterCount').addEventListener('input', e => {
+            document.getElementById('letterCountValue').innerText = e.target.value;
+        });
+
+        function generateSingleWord(length, charset, isReadable) {
+            let result = '';
+            if (isReadable) {
+                let useConsonant = Math.random() < 0.5;
+                for (let i = 0; i < length; i++) {
+                    const set = useConsonant ? CONSONANTS : VOWELS;
+                    const char = set.charAt(Math.floor(Math.random() * set.length));
+                    result += (document.getElementById('includeUpper').checked && (i === 0 || Math.random() < 0.2)) ? char.toUpperCase() : char;
+                    useConsonant = !useConsonant;
+                }
+            } else {
+                for (let i = 0; i < length; i++) {
+                    result += charset.charAt(Math.floor(Math.random() * charset.length));
+                }
+            }
+            return result;
+        }
+
+        function generateUniqueWords() {
+            const count = parseInt(document.getElementById('wordCount').value);
+            const length = parseInt(document.getElementById('letterCount').value);
+            const isReadable = document.getElementById('readableMode').checked;
+
+            let charset = '';
+            if (!isReadable) {
+                if (document.getElementById('includeLower').checked) charset += CHAR_LOWER;
+                if (document.getElementById('includeUpper').checked) charset += CHAR_UPPER;
+                if (document.getElementById('includeNumbers').checked) charset += CHAR_NUMBERS;
+                if (document.getElementById('includeSymbols').checked) charset += CHAR_SYMBOLS;
+
+                if (!charset) {
+                    showToast("Select at least one character type!", "warning");
+                    return;
+                }
+            }
+
+            const wordsSet = new Set();
+            let attempts = 0;
+            while (wordsSet.size < count && attempts < count * 50) {
+                wordsSet.add(generateSingleWord(length, charset, isReadable));
+                attempts++;
+            }
+
+            generatedWordsList = Array.from(wordsSet);
+            renderWordsList(generatedWordsList);
+            showToast(`Generated ${generatedWordsList.length} unique words.`);
+        }
+
+        function renderWordsList(words) {
+            document.getElementById('wordsResultCount').innerText = words.length;
+            const container = document.getElementById('wordsDisplayContainer');
+
+            if (words.length === 0) {
+                container.innerHTML = `<div class="col-span-full py-16 text-center theme-text-muted text-xs">No words found</div>`;
+                return;
+            }
+
+            container.innerHTML = words.map(w => `
+                <div class="group theme-input border rounded-xl p-2 flex items-center justify-between text-xs transition">
+                    <span class="font-mono text-amber-400 truncate pr-1">${w}</span>
+                    <button onclick="copySingleWord('${w}')" class="theme-text-muted hover:text-amber-400 transition" title="Copy">
+                        <i class="fa-regular fa-copy"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function copySingleWord(text) {
+            copyTextToClipboard(text);
+            showToast(`Copied "${text}"`);
+        }
+
+        function copyAllWords() {
+            if (generatedWordsList.length === 0) {
+                showToast("Generate words first!", "warning");
+                return;
+            }
+            copyTextToClipboard(generatedWordsList.join('\n'));
+            showToast("All generated words copied to clipboard!");
+        }
+
+        document.getElementById('searchWordsInput').addEventListener('input', e => {
+            const query = e.target.value.toLowerCase();
+            const filtered = generatedWordsList.filter(w => w.toLowerCase().includes(query));
+            renderWordsList(filtered);
+        });
+
+        // Initialize Workspace On Load
+        window.onload = function() {
+            generateUniqueWords();
+        };
+    </script>
+</body>
+</html>
