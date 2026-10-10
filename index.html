@@ -71,13 +71,13 @@
             color: var(--text-main);
             font-family: 'Inter', sans-serif;
             transition: background-color 0.25s ease, color 0.25s ease;
-            /* Allow Selection globally for left click drag & copy */
-            -webkit-user-select: text !important;
-            -moz-user-select: text !important;
-            -ms-user-select: text !important;
-            user-select: text !important;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
 
+        /* Allow Selection Inside Inputs and Textareas */
         textarea, input {
             -webkit-user-select: text !important;
             -moz-user-select: text !important;
@@ -619,6 +619,9 @@
     </div>
 
     <script>
+        // Disable Context Menu Globally
+        document.addEventListener('contextmenu', (e) => e.preventDefault());
+
         /* --------------------------------------------------------------------------
            1. PORTAL SWITCHING & DYNAMIC THEME ENGINE
            -------------------------------------------------------------------------- */
@@ -1351,6 +1354,7 @@
 
         function renderFancyCategoryTabs() {
             const tabsContainer = document.getElementById('fancy-category-tabs');
+            const isLight = document.body.classList.contains('light-theme');
             tabsContainer.innerHTML = FANCY_CATEGORIES.map(cat => {
                 const isActive = cat === fancyActiveCat;
                 const starIcon = cat === 'Favorites' ? '<i class="fa-solid fa-star text-amber-400 mr-1.5"></i>' : '';
