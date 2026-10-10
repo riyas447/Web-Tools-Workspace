@@ -207,9 +207,7 @@
 
     <main class="flex-1 flex flex-col h-full overflow-y-auto custom-scrollbar p-4 sm:p-6 lg:p-8" id="mainWorkspace">
         
-        <!-- ==========================================================================
-             PORTAL 1: BULK DOMAIN DNS RECORD CHECKER
-             ========================================================================== -->
+        <!-- PORTAL 1: BULK DOMAIN DNS RECORD CHECKER -->
         <section id="portal-dns" class="portal-section space-y-6 w-full">
             <div class="border-b theme-border pb-3 flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
@@ -347,9 +345,7 @@
         </section>
 
 
-        <!-- ==========================================================================
-             PORTAL 2: EMAIL SUBJECT DECODER & ENCODER TOOL
-             ========================================================================== -->
+        <!-- PORTAL 2: EMAIL SUBJECT DECODER & ENCODER TOOL -->
         <section id="portal-email" class="portal-section hidden space-y-6 max-w-5xl mx-auto w-full">
             <div class="border-b theme-border pb-3 flex items-center justify-between">
                 <div>
@@ -426,9 +422,7 @@
         </section>
 
 
-        <!-- ==========================================================================
-             PORTAL 3: FANCY TEXT GENERATOR TOOL
-             ========================================================================== -->
+        <!-- PORTAL 3: FANCY TEXT GENERATOR TOOL -->
         <section id="portal-fancy" class="portal-section hidden space-y-6 max-w-6xl mx-auto w-full">
             <div class="border-b theme-border pb-3 flex items-center justify-between">
                 <div>
@@ -493,9 +487,7 @@
         </section>
 
 
-        <!-- ==========================================================================
-             PORTAL 4: RANDOM WORD GENERATOR
-             ========================================================================== -->
+        <!-- PORTAL 4: RANDOM WORD GENERATOR -->
         <section id="portal-words" class="portal-section hidden space-y-6 w-full">
             <div class="border-b theme-border pb-3 flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
@@ -615,8 +607,33 @@
     </div>
 
     <script>
-        // Disable Right Click ONLY (Left Click Remains Fully Functional)
+        // --------------------------------------------------------------------------
+        // PREVENT INSPECT & DISABLE KEYS (F12, CTRL+SHIFT+I, RIGHT CLICK, ETC)
+        // --------------------------------------------------------------------------
         document.addEventListener('contextmenu', (e) => e.preventDefault());
+
+        document.addEventListener('keydown', (e) => {
+            // Disable F12
+            if (e.keyCode === 123) {
+                e.preventDefault();
+                return false;
+            }
+            // Disable Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+Shift+C
+            if (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) {
+                e.preventDefault();
+                return false;
+            }
+            // Disable Ctrl+U (View Source)
+            if (e.ctrlKey && e.keyCode === 85) {
+                e.preventDefault();
+                return false;
+            }
+            // Disable Ctrl+S (Save Page)
+            if (e.ctrlKey && e.keyCode === 83) {
+                e.preventDefault();
+                return false;
+            }
+        });
 
         /* --------------------------------------------------------------------------
            1. PORTAL SWITCHING & DYNAMIC THEME ENGINE
