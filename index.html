@@ -20,11 +20,11 @@
         }
     </script>
     <!-- FontAwesome Icons CDN -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts Inter -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
     <style>
         /* Base Root Theme Variables */
@@ -111,6 +111,18 @@
         .btn-selected-utf32 { background-color: #d97706 !important; border-color: #fbbf24 !important; color: #fff !important; box-shadow: 0 0 12px rgba(251, 191, 36, 0.4); }
         .btn-selected-stricthex { background-color: #059669 !important; border-color: #34d399 !important; color: #fff !important; box-shadow: 0 0 12px rgba(52, 211, 153, 0.4); }
         .btn-selected-ascii { background-color: #e11d48 !important; border-color: #fb7185 !important; color: #fff !important; box-shadow: 0 0 12px rgba(251, 113, 133, 0.4); }
+
+        /* Fancy Cards styling */
+        .fancy-card {
+            background: rgba(30, 41, 59, 0.4);
+            border: 1px solid var(--border-color);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .fancy-card:hover {
+            border-color: rgba(168, 85, 247, 0.5);
+            box-shadow: 0 10px 25px -10px rgba(168, 85, 247, 0.25);
+            transform: translateY(-2px);
+        }
     </style>
 </head>
 <body class="h-full flex flex-col md:flex-row overflow-hidden" id="appBody">
@@ -138,38 +150,49 @@
                 <span class="text-[11px] font-bold theme-text-muted uppercase tracking-wider">Portals</span>
             </div>
 
-            <!-- Sidebar Navigation Items -->
+            <!-- Sidebar Navigation Items ORDERED -->
             <nav class="px-3 space-y-2" id="sidebarNav">
-                <!-- 1. Email Subject Decoder & Encoder -->
-                <button onclick="switchPortal('email')" id="nav-btn-email" class="nav-item w-full flex items-center space-x-3 px-3.5 py-3 rounded-xl text-xs font-semibold transition-all duration-200 bg-indigo-600 text-white shadow-lg">
+                <!-- 1st: Bulk Domain DNS Checker -->
+                <button onclick="switchPortal('dns')" id="nav-btn-dns" class="nav-item w-full flex items-center space-x-3 px-3.5 py-3 rounded-xl text-xs font-semibold transition-all duration-200 bg-indigo-600 text-white shadow-lg">
+                    <div class="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center text-emerald-400 shrink-0">
+                        <i class="fa-solid fa-network-wired text-sm"></i>
+                    </div>
+                    <div class="text-left truncate">
+                        <div class="truncate">Bulk Domain Checker</div>
+                        <div class="text-[10px] font-normal opacity-80 truncate">DNS, SSL & WHOIS Lookup</div>
+                    </div>
+                </button>
+
+                <!-- 2nd: Email Subject Decoder -->
+                <button onclick="switchPortal('email')" id="nav-btn-email" class="nav-item w-full flex items-center space-x-3 px-3.5 py-3 rounded-xl text-xs font-semibold transition-all duration-200 theme-text-muted hover:bg-slate-800/40 border border-transparent">
                     <div class="w-8 h-8 rounded-lg bg-indigo-500/30 flex items-center justify-center text-indigo-200 shrink-0">
                         <i class="fa-solid fa-envelope-open-text text-sm"></i>
                     </div>
                     <div class="text-left truncate">
                         <div class="truncate">Email Subject Decoder</div>
-                        <div class="text-[10px] font-normal opacity-80 truncate">MIME, Base64 & Text Cases</div>
+                        <div class="text-[10px] font-normal theme-text-muted truncate">MIME, Base64 & Text Cases</div>
                     </div>
                 </button>
 
-                <!-- 2. Bulk Domain DNS Checker -->
-                <button onclick="switchPortal('dns')" id="nav-btn-dns" class="nav-item w-full flex items-center space-x-3 px-3.5 py-3 rounded-xl text-xs font-semibold transition-all duration-200 theme-text-muted hover:bg-slate-800/40 border border-transparent">
-                    <div class="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center text-emerald-400 shrink-0">
-                        <i class="fa-solid fa-network-wired text-sm"></i>
+                <!-- 3rd: Fancy Text Generator -->
+                <button onclick="switchPortal('fancy')" id="nav-btn-fancy" class="nav-item w-full flex items-center space-x-3 px-3.5 py-3 rounded-xl text-xs font-semibold transition-all duration-200 theme-text-muted hover:bg-slate-800/40 border border-transparent">
+                    <div class="w-8 h-8 rounded-lg bg-purple-500/20 flex items-center justify-center text-purple-400 shrink-0">
+                        <i class="fa-solid fa-wand-magic-sparkles text-sm"></i>
                     </div>
                     <div class="text-left truncate">
-                        <div class="truncate">Bulk Domain DNS Checker</div>
-                        <div class="text-[10px] font-normal theme-text-muted truncate">DNS, SSL & WHOIS Lookup</div>
+                        <div class="truncate">Fancy Text Generator</div>
+                        <div class="text-[10px] font-normal theme-text-muted truncate">Unicode Fonts, Art & Glitch</div>
                     </div>
                 </button>
 
-                <!-- 3. Random Word Generator -->
+                <!-- 4th: Random Word Generator -->
                 <button onclick="switchPortal('words')" id="nav-btn-words" class="nav-item w-full flex items-center space-x-3 px-3.5 py-3 rounded-xl text-xs font-semibold transition-all duration-200 theme-text-muted hover:bg-slate-800/40 border border-transparent">
                     <div class="w-8 h-8 rounded-lg bg-amber-500/20 flex items-center justify-center text-amber-400 shrink-0">
                         <i class="fa-solid fa-shuffle text-sm"></i>
                     </div>
                     <div class="text-left truncate">
                         <div class="truncate">Random Word Generator</div>
-                        <div class="text-[10px] font-normal theme-text-muted truncate">Unique Words & Custom Strings</div>
+                        <div class="text-[10px] font-normal theme-text-muted truncate">Unique Words & Strings</div>
                     </div>
                 </button>
             </nav>
@@ -185,88 +208,9 @@
     <main class="flex-1 flex flex-col h-full overflow-y-auto custom-scrollbar p-4 sm:p-6 lg:p-8" id="mainWorkspace">
         
         <!-- ==========================================================================
-             PORTAL 1: EMAIL SUBJECT DECODER & ENCODER TOOL
+             PORTAL 1: BULK DOMAIN DNS RECORD CHECKER
              ========================================================================== -->
-        <section id="portal-email" class="portal-section space-y-6 max-w-5xl mx-auto w-full">
-            <div class="border-b theme-border pb-3 flex items-center justify-between">
-                <div>
-                    <h2 class="text-xl font-bold theme-text-main flex items-center gap-2">
-                        <i class="fa-solid fa-envelope-open-text text-amber-400"></i> Email Subject & Text Case Converter
-                    </h2>
-                    <p class="text-xs theme-text-muted mt-1">Decode/Encode email headers ASCII, UTF-8, UTF-32, Base64 and QP support.</p>
-                </div>
-            </div>
-
-            <!-- Email Encoder/Decoder Card -->
-            <div class="theme-card border rounded-2xl p-5 shadow-xl space-y-4">
-                <div>
-                    <div class="flex justify-between items-center mb-2">
-                        <label class="text-xs font-semibold theme-text-muted uppercase tracking-wider">Input Text / Encoded String</label>
-                        <button onclick="pasteInputEmail()" class="text-xs theme-text-muted hover:theme-text-main transition flex items-center gap-1">
-                            <i class="fa-regular fa-clipboard"></i> Paste
-                        </button>
-                    </div>
-                    <textarea id="inputTextEmail" rows="4" 
-                        class="w-full theme-input border rounded-xl p-3.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition font-mono text-xs sm:text-sm custom-scrollbar"
-                        placeholder="Enter plain text OR encoded header like:&#10;=?utf-8?q?=48=69=20=67=6F=6F=64=20=6D=6F=72=6E=69=6E=67?=&#10;Hello world example"></textarea>
-                </div>
-
-                <!-- Text Case Converters -->
-                <div class="theme-card p-3 rounded-xl border">
-                    <p class="text-[11px] font-semibold text-sky-400 uppercase tracking-wider mb-2">Text Case Converters:</p>
-                    <div class="flex flex-wrap gap-2">
-                        <button onclick="changeCaseEmail('sentence')" class="text-xs theme-card border hover:border-sky-500 theme-text-main px-3 py-1.5 rounded-lg transition active:scale-95">Sentence case</button>
-                        <button onclick="changeCaseEmail('lower')" class="text-xs theme-card border hover:border-sky-500 theme-text-main px-3 py-1.5 rounded-lg transition active:scale-95">lower case</button>
-                        <button onclick="changeCaseEmail('upper')" class="text-xs theme-card border hover:border-sky-500 theme-text-main px-3 py-1.5 rounded-lg transition active:scale-95">UPPER CASE</button>
-                        <button onclick="changeCaseEmail('capitalized')" class="text-xs theme-card border hover:border-sky-500 theme-text-main px-3 py-1.5 rounded-lg transition active:scale-95">Capitalized Case</button>
-                        <button onclick="changeCaseEmail('alternating')" class="text-xs theme-card border hover:border-sky-500 theme-text-main px-3 py-1.5 rounded-lg transition active:scale-95">aLtErNaTiNg cAsE</button>
-                        <button onclick="changeCaseEmail('title')" class="text-xs theme-card border hover:border-sky-500 theme-text-main px-3 py-1.5 rounded-lg transition active:scale-95">Title Case</button>
-                        <button onclick="changeCaseEmail('inverse')" class="text-xs theme-card border hover:border-sky-500 theme-text-main px-3 py-1.5 rounded-lg transition active:scale-95">InVeRsE CaSe</button>
-                    </div>
-                </div>
-
-                <!-- Action Buttons Grid -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                    <button id="btn-decode" onclick="processEmail('decode')" class="action-btn theme-card hover:bg-teal-600/20 hover:border-teal-500 hover:text-teal-300 theme-text-main font-medium py-3 px-3 rounded-xl transition border active:scale-95 flex items-center justify-center gap-2 text-xs">
-                        <i class="fa-solid fa-key"></i> Universal Decode
-                    </button>
-                    <button id="btn-encode-stricthex" onclick="processEmail('encode-stricthex')" class="action-btn theme-card hover:bg-emerald-600/20 hover:border-emerald-500 hover:text-emerald-300 theme-text-main font-medium py-3 px-3 rounded-xl transition border active:scale-95 flex items-center justify-center gap-2 text-xs">
-                        <i class="fa-solid fa-lock"></i> Strict Hex
-                    </button>
-                    <button id="btn-encode-ascii" onclick="processEmail('encode-ascii')" class="action-btn theme-card hover:bg-rose-600/20 hover:border-rose-500 hover:text-rose-300 theme-text-main font-medium py-3 px-3 rounded-xl transition border active:scale-95 flex items-center justify-center gap-2 text-xs">
-                        <i class="fa-solid fa-font"></i> ASCII QP Header
-                    </button>
-                    <button id="btn-encode-b64" onclick="processEmail('encode-b64')" class="action-btn theme-card hover:bg-blue-600/20 hover:border-blue-500 hover:text-blue-300 theme-text-main font-medium py-3 px-3 rounded-xl transition border active:scale-95 flex items-center justify-center gap-2 text-xs">
-                        <i class="fa-solid fa-hashtag"></i> UTF-8 Base64
-                    </button>
-                    <button id="btn-encode-qp" onclick="processEmail('encode-qp')" class="action-btn theme-card hover:bg-purple-600/20 hover:border-purple-500 hover:text-purple-300 theme-text-main font-medium py-3 px-3 rounded-xl transition border active:scale-95 flex items-center justify-center gap-2 text-xs">
-                        <i class="fa-solid fa-code"></i> UTF-8 QP
-                    </button>
-                    <button id="btn-encode-utf32" onclick="processEmail('encode-utf32')" class="action-btn theme-card hover:bg-amber-600/20 hover:border-amber-500 hover:text-amber-300 theme-text-main font-medium py-3 px-3 rounded-xl transition border active:scale-95 flex items-center justify-center gap-2 text-xs">
-                        <i class="fa-solid fa-layer-group"></i> UTF-32 Base64
-                    </button>
-                </div>
-
-                <!-- Result Output -->
-                <div>
-                    <div class="flex justify-between items-center mb-2">
-                        <label class="text-xs font-semibold theme-text-muted uppercase tracking-wider">Result Output</label>
-                        <button onclick="copyOutputEmail()" class="text-xs text-emerald-400 hover:text-emerald-300 transition flex items-center gap-1">
-                            <i class="fa-regular fa-copy"></i> <span id="copyBtnTextEmail">Copy</span>
-                        </button>
-                    </div>
-                    <textarea id="outputTextEmail" rows="4" readonly 
-                        class="w-full theme-input border rounded-xl p-3.5 text-emerald-400 font-mono text-xs sm:text-sm focus:outline-none custom-scrollbar"
-                        placeholder="Output will appear here..."></textarea>
-                </div>
-            </div>
-        </section>
-
-
-        <!-- ==========================================================================
-             PORTAL 2: BULK DOMAIN DNS RECORD CHECKER
-             ========================================================================== -->
-        <section id="portal-dns" class="portal-section hidden space-y-6 w-full">
+        <section id="portal-dns" class="portal-section space-y-6 w-full">
             <div class="border-b theme-border pb-3 flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
                     <h2 class="text-xl font-bold theme-text-main flex items-center gap-2">
@@ -404,7 +348,163 @@
 
 
         <!-- ==========================================================================
-             PORTAL 3: RANDOM WORD GENERATOR
+             PORTAL 2: EMAIL SUBJECT DECODER & ENCODER TOOL
+             ========================================================================== -->
+        <section id="portal-email" class="portal-section hidden space-y-6 max-w-5xl mx-auto w-full">
+            <div class="border-b theme-border pb-3 flex items-center justify-between">
+                <div>
+                    <h2 class="text-xl font-bold theme-text-main flex items-center gap-2">
+                        <i class="fa-solid fa-envelope-open-text text-indigo-400"></i> Email Subject & Text Case Converter
+                    </h2>
+                    <p class="text-xs theme-text-muted mt-1">Decode/Encode email headers ASCII, UTF-8, UTF-32, Base64 and QP support.</p>
+                </div>
+            </div>
+
+            <!-- Email Encoder/Decoder Card -->
+            <div class="theme-card border rounded-2xl p-5 shadow-xl space-y-4">
+                <div>
+                    <div class="flex justify-between items-center mb-2">
+                        <label class="text-xs font-semibold theme-text-muted uppercase tracking-wider">Input Text / Encoded String</label>
+                        <button onclick="pasteInputEmail()" class="text-xs theme-text-muted hover:theme-text-main transition flex items-center gap-1">
+                            <i class="fa-regular fa-clipboard"></i> Paste
+                        </button>
+                    </div>
+                    <textarea id="inputTextEmail" rows="4" 
+                        class="w-full theme-input border rounded-xl p-3.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition font-mono text-xs sm:text-sm custom-scrollbar"
+                        placeholder="Enter plain text OR encoded header like:&#10;=?utf-8?q?=48=69=20=67=6F=6F=64=20=6D=6F=72=6E=69=6E=67?=&#10;Hello world example"></textarea>
+                </div>
+
+                <!-- Text Case Converters -->
+                <div class="theme-card p-3 rounded-xl border">
+                    <p class="text-[11px] font-semibold text-sky-400 uppercase tracking-wider mb-2">Text Case Converters:</p>
+                    <div class="flex flex-wrap gap-2">
+                        <button onclick="changeCaseEmail('sentence')" class="text-xs theme-card border hover:border-sky-500 theme-text-main px-3 py-1.5 rounded-lg transition active:scale-95">Sentence case</button>
+                        <button onclick="changeCaseEmail('lower')" class="text-xs theme-card border hover:border-sky-500 theme-text-main px-3 py-1.5 rounded-lg transition active:scale-95">lower case</button>
+                        <button onclick="changeCaseEmail('upper')" class="text-xs theme-card border hover:border-sky-500 theme-text-main px-3 py-1.5 rounded-lg transition active:scale-95">UPPER CASE</button>
+                        <button onclick="changeCaseEmail('capitalized')" class="text-xs theme-card border hover:border-sky-500 theme-text-main px-3 py-1.5 rounded-lg transition active:scale-95">Capitalized Case</button>
+                        <button onclick="changeCaseEmail('alternating')" class="text-xs theme-card border hover:border-sky-500 theme-text-main px-3 py-1.5 rounded-lg transition active:scale-95">aLtErNaTiNg cAsE</button>
+                        <button onclick="changeCaseEmail('title')" class="text-xs theme-card border hover:border-sky-500 theme-text-main px-3 py-1.5 rounded-lg transition active:scale-95">Title Case</button>
+                        <button onclick="changeCaseEmail('inverse')" class="text-xs theme-card border hover:border-sky-500 theme-text-main px-3 py-1.5 rounded-lg transition active:scale-95">InVeRsE CaSe</button>
+                    </div>
+                </div>
+
+                <!-- Action Buttons Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                    <button id="btn-decode" onclick="processEmail('decode')" class="action-btn theme-card hover:bg-teal-600/20 hover:border-teal-500 hover:text-teal-300 theme-text-main font-medium py-3 px-3 rounded-xl transition border active:scale-95 flex items-center justify-center gap-2 text-xs">
+                        <i class="fa-solid fa-key"></i> Universal Decode
+                    </button>
+                    <button id="btn-encode-stricthex" onclick="processEmail('encode-stricthex')" class="action-btn theme-card hover:bg-emerald-600/20 hover:border-emerald-500 hover:text-emerald-300 theme-text-main font-medium py-3 px-3 rounded-xl transition border active:scale-95 flex items-center justify-center gap-2 text-xs">
+                        <i class="fa-solid fa-lock"></i> Strict Hex
+                    </button>
+                    <button id="btn-encode-ascii" onclick="processEmail('encode-ascii')" class="action-btn theme-card hover:bg-rose-600/20 hover:border-rose-500 hover:text-rose-300 theme-text-main font-medium py-3 px-3 rounded-xl transition border active:scale-95 flex items-center justify-center gap-2 text-xs">
+                        <i class="fa-solid fa-font"></i> ASCII QP Header
+                    </button>
+                    <button id="btn-encode-b64" onclick="processEmail('encode-b64')" class="action-btn theme-card hover:bg-blue-600/20 hover:border-blue-500 hover:text-blue-300 theme-text-main font-medium py-3 px-3 rounded-xl transition border active:scale-95 flex items-center justify-center gap-2 text-xs">
+                        <i class="fa-solid fa-hashtag"></i> UTF-8 Base64
+                    </button>
+                    <button id="btn-encode-qp" onclick="processEmail('encode-qp')" class="action-btn theme-card hover:bg-purple-600/20 hover:border-purple-500 hover:text-purple-300 theme-text-main font-medium py-3 px-3 rounded-xl transition border active:scale-95 flex items-center justify-center gap-2 text-xs">
+                        <i class="fa-solid fa-code"></i> UTF-8 QP
+                    </button>
+                    <button id="btn-encode-utf32" onclick="processEmail('encode-utf32')" class="action-btn theme-card hover:bg-amber-600/20 hover:border-amber-500 hover:text-amber-300 theme-text-main font-medium py-3 px-3 rounded-xl transition border active:scale-95 flex items-center justify-center gap-2 text-xs">
+                        <i class="fa-solid fa-layer-group"></i> UTF-32 Base64
+                    </button>
+                </div>
+
+                <!-- Result Output -->
+                <div>
+                    <div class="flex justify-between items-center mb-2">
+                        <label class="text-xs font-semibold theme-text-muted uppercase tracking-wider">Result Output</label>
+                        <button onclick="copyOutputEmail()" class="text-xs text-emerald-400 hover:text-emerald-300 transition flex items-center gap-1">
+                            <i class="fa-regular fa-copy"></i> <span id="copyBtnTextEmail">Copy</span>
+                        </button>
+                    </div>
+                    <textarea id="outputTextEmail" rows="4" readonly 
+                        class="w-full theme-input border rounded-xl p-3.5 text-emerald-400 font-mono text-xs sm:text-sm focus:outline-none custom-scrollbar"
+                        placeholder="Output will appear here..."></textarea>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ==========================================================================
+             PORTAL 3: FANCY TEXT GENERATOR TOOL
+             ========================================================================== -->
+        <section id="portal-fancy" class="portal-section hidden space-y-6 max-w-6xl mx-auto w-full">
+            <div class="border-b theme-border pb-3 flex items-center justify-between">
+                <div>
+                    <h2 class="text-xl font-bold theme-text-main flex items-center gap-2">
+                        <i class="fa-solid fa-wand-magic-sparkles text-purple-400"></i> Next-Gen Fancy Font & Unicode Text Generator
+                    </h2>
+                    <p class="text-xs theme-text-muted mt-1">Transform plain text into stylish Unicode fonts, aesthetic symbols, and glitch styles.</p>
+                </div>
+                <div class="flex gap-2">
+                    <button id="btn-fancy-inspire" onclick="inspireFancyText()" class="px-3 py-1.5 text-xs font-semibold rounded-xl theme-card border hover:border-purple-500 text-purple-300 transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-wand-magic-sparkles text-purple-400"></i> Inspire Me
+                    </button>
+                </div>
+            </div>
+
+            <!-- Input Box -->
+            <div class="theme-card border rounded-2xl p-5 shadow-xl space-y-4">
+                <div class="flex items-center justify-between">
+                    <label class="text-xs font-semibold theme-text-muted uppercase tracking-wider font-mono">
+                        <i class="fa-solid fa-terminal text-purple-400"></i> Input Phrase
+                    </label>
+                    <div class="text-xs theme-text-muted flex gap-3 font-mono">
+                        <span id="fancy-char-count" class="theme-card px-2 py-0.5 rounded border">0 chars</span>
+                        <span id="fancy-word-count" class="theme-card px-2 py-0.5 rounded border">0 words</span>
+                    </div>
+                </div>
+
+                <div class="relative">
+                    <textarea id="fancy-main-input" rows="3" class="w-full p-3.5 pr-10 theme-input border rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm sm:text-base custom-scrollbar" placeholder="Type your text, title, username, or message here..."></textarea>
+                    <button onclick="clearFancyInput()" title="Clear Text" class="absolute right-3 top-3.5 p-1.5 text-slate-400 hover:text-pink-400 rounded-lg transition">
+                        <i class="fa-solid fa-trash-can text-sm"></i>
+                    </button>
+                </div>
+
+                <!-- Customization Toolbar -->
+                <div class="flex flex-wrap items-center justify-between gap-4 pt-2 border-t theme-border">
+                    <div class="flex items-center gap-3 theme-card px-3.5 py-1.5 rounded-xl border">
+                        <span class="text-xs font-semibold theme-text-main flex items-center gap-1.5 font-mono">
+                            <i class="fa-solid fa-bolt text-amber-400"></i> ZALGO INTENSITY:
+                        </span>
+                        <input type="range" id="fancy-glitch-slider" min="1" max="15" value="5" class="w-24 sm:w-32 accent-purple-500 cursor-pointer">
+                        <span id="fancy-glitch-val" class="text-xs font-mono font-bold text-purple-400 w-4">5</span>
+                    </div>
+
+                    <div class="flex items-center gap-2 overflow-x-auto py-1 custom-scrollbar">
+                        <span class="text-xs font-mono theme-text-muted whitespace-nowrap">WRAP:</span>
+                        <button class="text-xs px-2.5 py-1 rounded-lg theme-card border hover:border-purple-500 text-slate-300 transition" onclick="wrapFancyText('✨ {t} ✨')">✨ Sparkles</button>
+                        <button class="text-xs px-2.5 py-1 rounded-lg theme-card border hover:border-purple-500 text-slate-300 transition" onclick="wrapFancyText('꧁༺ {t} ༻꧂')">꧁ Wings</button>
+                        <button class="text-xs px-2.5 py-1 rounded-lg theme-card border hover:border-purple-500 text-slate-300 transition" onclick="wrapFancyText('♥ {t} ♥')">♥ Hearts</button>
+                        <button class="text-xs px-2.5 py-1 rounded-lg theme-card border hover:border-purple-500 text-slate-300 transition" onclick="wrapFancyText('【 {t} 】')">【 Box 】</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Categories and Search -->
+            <div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
+                <div class="overflow-x-auto pb-1 custom-scrollbar">
+                    <div id="fancy-category-tabs" class="flex items-center gap-2 min-w-max">
+                        <!-- Dynamic Categories -->
+                    </div>
+                </div>
+                <div class="relative min-w-[200px] md:w-60">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 theme-text-muted text-xs"></i>
+                    <input type="text" id="fancy-font-search" placeholder="Filter style..." class="w-full pl-8 pr-3 py-1.5 text-xs theme-input border rounded-xl focus:outline-none focus:ring-1 focus:ring-purple-500">
+                </div>
+            </div>
+
+            <!-- Font Cards Grid -->
+            <div id="fancy-font-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- Injected via JS -->
+            </div>
+        </section>
+
+
+        <!-- ==========================================================================
+             PORTAL 4: RANDOM WORD GENERATOR
              ========================================================================== -->
         <section id="portal-words" class="portal-section hidden space-y-6 w-full">
             <div class="border-b theme-border pb-3 flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -588,200 +688,7 @@
         }
 
         /* --------------------------------------------------------------------------
-           2. EMAIL SUBJECT CONVERTER LOGIC
-           -------------------------------------------------------------------------- */
-        function changeCaseEmail(type) {
-            const input = document.getElementById('inputTextEmail');
-            let text = input.value;
-            if (!text) return;
-
-            if (type === 'sentence') {
-                text = text.toLowerCase().replace(/(^\s*\w|[\.\?!\n]\s*\w)/g, c => c.toUpperCase());
-            } else if (type === 'lower') {
-                text = text.toLowerCase();
-            } else if (type === 'upper') {
-                text = text.toUpperCase();
-            } else if (type === 'capitalized') {
-                text = text.toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
-            } else if (type === 'alternating') {
-                text = text.split('').map((c, i) => i % 2 === 0 ? c.toLowerCase() : c.toUpperCase()).join('');
-            } else if (type === 'title') {
-                const minorWords = ['a', 'an', 'and', 'as', 'at', 'but', 'by', 'for', 'in', 'nor', 'of', 'on', 'or', 'so', 'the', 'to', 'up', 'yet'];
-                text = text.toLowerCase().split(' ').map((word, index) => {
-                    if (index > 0 && minorWords.includes(word)) return word;
-                    return word.charAt(0).toUpperCase() + word.slice(1);
-                }).join(' ');
-            } else if (type === 'inverse') {
-                text = text.split('').map(c => c === c.toUpperCase() ? c.toLowerCase() : c.toUpperCase()).join('');
-            }
-
-            input.value = text;
-        }
-
-        function processEmail(mode) {
-            const input = document.getElementById('inputTextEmail').value;
-            const outputField = document.getElementById('outputTextEmail');
-
-            highlightActiveEmailBtn(mode);
-
-            if (!input) {
-                outputField.value = "Error: Please enter text in the input box first.";
-                return;
-            }
-
-            try {
-                if (mode === 'decode') outputField.value = decodeMimeSubject(input);
-                else if (mode === 'encode-stricthex') outputField.value = encodeStrictHexSubject(input);
-                else if (mode === 'encode-ascii') outputField.value = encodeASCIISubject(input);
-                else if (mode === 'encode-b64') outputField.value = encodeBase64Subject(input);
-                else if (mode === 'encode-qp') outputField.value = encodeQPSubject(input);
-                else if (mode === 'encode-utf32') outputField.value = encodeUTF32Subject(input);
-            } catch (err) {
-                outputField.value = "Error parsing string. Please check input format.";
-            }
-        }
-
-        function highlightActiveEmailBtn(mode) {
-            const btnMap = {
-                'decode': 'btn-decode',
-                'encode-stricthex': 'btn-encode-stricthex',
-                'encode-ascii': 'btn-encode-ascii',
-                'encode-b64': 'btn-encode-b64',
-                'encode-qp': 'btn-encode-qp',
-                'encode-utf32': 'btn-encode-utf32'
-            };
-
-            Object.values(btnMap).forEach(id => {
-                const btn = document.getElementById(id);
-                if (btn) btn.classList.remove('btn-selected-decode', 'btn-selected-stricthex', 'btn-selected-ascii', 'btn-selected-b64', 'btn-selected-qp', 'btn-selected-utf32');
-            });
-
-            const activeBtn = document.getElementById(btnMap[mode]);
-            if (activeBtn) {
-                const classMap = {
-                    'decode': 'btn-selected-decode',
-                    'encode-stricthex': 'btn-selected-stricthex',
-                    'encode-ascii': 'btn-selected-ascii',
-                    'encode-b64': 'btn-selected-b64',
-                    'encode-qp': 'btn-selected-qp',
-                    'encode-utf32': 'btn-selected-utf32'
-                };
-                activeBtn.classList.add(classMap[mode]);
-            }
-        }
-
-        function decodeMimeSubject(text) {
-            let src = text.trim();
-            const regex = /=\?([^?]+)\?([BQbq])\?([^?]+)\?=/g;
-            if (regex.test(src)) {
-                return src.replace(/=\?([^?]+)\?([BQbq])\?([^?]+)\?=/g, (match, charset, encoding, data) => {
-                    const enc = encoding.toUpperCase();
-                    const cs = charset.toUpperCase();
-
-                    if (enc === 'B') {
-                        const binary = atob(data);
-                        const bytes = Uint8Array.from(binary, char => char.charCodeAt(0));
-
-                        if (cs.includes('UTF-32')) {
-                            let result = '';
-                            for (let i = 0; i < bytes.length; i += 4) {
-                                const codePoint = (bytes[i] << 24) | (bytes[i + 1] << 16) | (bytes[i + 2] << 8) | bytes[i + 3];
-                                result += String.fromCodePoint(codePoint);
-                            }
-                            return result;
-                        } else {
-                            return new TextDecoder(charset).decode(bytes);
-                        }
-                    } else if (enc === 'Q') {
-                        let qpDecoded = data.replace(/_/g, ' ');
-                        qpDecoded = qpDecoded.replace(/=([0-9A-Fa-f]{2})/g, (_, hex) => String.fromCharCode(parseInt(hex, 16)));
-                        const bytes = Uint8Array.from(qpDecoded, char => char.charCodeAt(0));
-                        return new TextDecoder(charset).decode(bytes);
-                    }
-                    return match;
-                });
-            }
-
-            let qpDecoded = src.replace(/_/g, ' ');
-            qpDecoded = qpDecoded.replace(/=([0-9A-Fa-f]{2})/g, (_, hex) => String.fromCharCode(parseInt(hex, 16)));
-            const bytes = Uint8Array.from(qpDecoded, char => char.charCodeAt(0));
-            return new TextDecoder('utf-8').decode(bytes);
-        }
-
-        function encodeStrictHexSubject(text) {
-            const bytes = new TextEncoder().encode(text);
-            let hexStr = '';
-            bytes.forEach(byte => { hexStr += '=' + byte.toString(16).toUpperCase().padStart(2, '0'); });
-            return `=?utf-8?q?${hexStr}?=`;
-        }
-
-        function encodeASCIISubject(text) {
-            let qp = '';
-            for (let i = 0; i < text.length; i++) {
-                const code = text.charCodeAt(i);
-                if (code > 127) qp += '=' + code.toString(16).toUpperCase().padStart(2, '0');
-                else if (code === 32) qp += '_';
-                else if ((code >= 48 && code <= 57) || (code >= 65 && code <= 90) || (code >= 97 && code <= 122)) qp += text.charAt(i);
-                else qp += '=' + code.toString(16).toUpperCase().padStart(2, '0');
-            }
-            return `=?us-ascii?Q?${qp}?=`;
-        }
-
-        function encodeBase64Subject(text) {
-            const bytes = new TextEncoder().encode(text);
-            let binary = '';
-            bytes.forEach(b => binary += String.fromCharCode(b));
-            return `=?UTF-8?B?${btoa(binary)}?=`;
-        }
-
-        function encodeQPSubject(text) {
-            const bytes = new TextEncoder().encode(text);
-            let qp = '';
-            bytes.forEach(byte => {
-                if (byte === 32) qp += '_';
-                else if ((byte >= 48 && byte <= 57) || (byte >= 65 && byte <= 90) || (byte >= 97 && byte <= 122)) qp += String.fromCharCode(byte);
-                else qp += '=' + byte.toString(16).toUpperCase().padStart(2, '0');
-            });
-            return `=?UTF-8?Q?${qp}?=`;
-        }
-
-        function encodeUTF32Subject(text) {
-            const codePoints = Array.from(text).map(c => c.codePointAt(0));
-            const bytes = new Uint8Array(codePoints.length * 4);
-            codePoints.forEach((cp, index) => {
-                const offset = index * 4;
-                bytes[offset]     = (cp >> 24) & 0xFF;
-                bytes[offset + 1] = (cp >> 16) & 0xFF;
-                bytes[offset + 2] = (cp >> 8)  & 0xFF;
-                bytes[offset + 3] = cp & 0xFF;
-            });
-            let binary = '';
-            bytes.forEach(b => binary += String.fromCharCode(b));
-            return `=?UTF-32?B?${btoa(binary)}?=`;
-        }
-
-        function copyOutputEmail() {
-            const output = document.getElementById('outputTextEmail');
-            if (!output.value) return;
-            copyTextToClipboard(output.value);
-            showToast("Result copied to clipboard!");
-        }
-
-        async function pasteInputEmail() {
-            const inputField = document.getElementById('inputTextEmail');
-            try {
-                if (navigator.clipboard && navigator.clipboard.readText) {
-                    inputField.value = await navigator.clipboard.readText();
-                } else {
-                    showToast("Press Ctrl+V / Cmd+V to paste manually", "warning");
-                }
-            } catch (err) {
-                showToast("Press Ctrl+V / Cmd+V to paste manually", "warning");
-            }
-        }
-
-        /* --------------------------------------------------------------------------
-           3. BULK DOMAIN DNS CHECKER LOGIC (UPDATED DYNAMIC COLUMN VISIBILITY)
+           2. BULK DOMAIN DNS CHECKER LOGIC
            -------------------------------------------------------------------------- */
         let dnsResultsStore = [];
         let dnsSortCol = 'domain';
@@ -899,7 +806,6 @@
                 `;
                 tbody.appendChild(row);
 
-                // Apply initial column visibility settings
                 dnsColumnMap.forEach(c => {
                     const chk = document.getElementById(c.id);
                     if (chk && !chk.checked) {
@@ -1122,7 +1028,6 @@
                 `;
                 tbody.appendChild(row);
 
-                // Re-apply visibility rules
                 dnsColumnMap.forEach(c => {
                     const chk = document.getElementById(c.id);
                     if (chk && !chk.checked) {
@@ -1133,7 +1038,470 @@
         }
 
         /* --------------------------------------------------------------------------
-           4. RANDOM WORD GENERATOR LOGIC
+           3. EMAIL SUBJECT CONVERTER LOGIC
+           -------------------------------------------------------------------------- */
+        function changeCaseEmail(type) {
+            const input = document.getElementById('inputTextEmail');
+            let text = input.value;
+            if (!text) return;
+
+            if (type === 'sentence') {
+                text = text.toLowerCase().replace(/(^\s*\w|[\.\?!\n]\s*\w)/g, c => c.toUpperCase());
+            } else if (type === 'lower') {
+                text = text.toLowerCase();
+            } else if (type === 'upper') {
+                text = text.toUpperCase();
+            } else if (type === 'capitalized') {
+                text = text.toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
+            } else if (type === 'alternating') {
+                text = text.split('').map((c, i) => i % 2 === 0 ? c.toLowerCase() : c.toUpperCase()).join('');
+            } else if (type === 'title') {
+                const minorWords = ['a', 'an', 'and', 'as', 'at', 'but', 'by', 'for', 'in', 'nor', 'of', 'on', 'or', 'so', 'the', 'to', 'up', 'yet'];
+                text = text.toLowerCase().split(' ').map((word, index) => {
+                    if (index > 0 && minorWords.includes(word)) return word;
+                    return word.charAt(0).toUpperCase() + word.slice(1);
+                }).join(' ');
+            } else if (type === 'inverse') {
+                text = text.split('').map(c => c === c.toUpperCase() ? c.toLowerCase() : c.toUpperCase()).join('');
+            }
+
+            input.value = text;
+        }
+
+        function processEmail(mode) {
+            const input = document.getElementById('inputTextEmail').value;
+            const outputField = document.getElementById('outputTextEmail');
+
+            highlightActiveEmailBtn(mode);
+
+            if (!input) {
+                outputField.value = "Error: Please enter text in the input box first.";
+                return;
+            }
+
+            try {
+                if (mode === 'decode') outputField.value = decodeMimeSubject(input);
+                else if (mode === 'encode-stricthex') outputField.value = encodeStrictHexSubject(input);
+                else if (mode === 'encode-ascii') outputField.value = encodeASCIISubject(input);
+                else if (mode === 'encode-b64') outputField.value = encodeBase64Subject(input);
+                else if (mode === 'encode-qp') outputField.value = encodeQPSubject(input);
+                else if (mode === 'encode-utf32') outputField.value = encodeUTF32Subject(input);
+            } catch (err) {
+                outputField.value = "Error parsing string. Please check input format.";
+            }
+        }
+
+        function highlightActiveEmailBtn(mode) {
+            const btnMap = {
+                'decode': 'btn-decode',
+                'encode-stricthex': 'btn-encode-stricthex',
+                'encode-ascii': 'btn-encode-ascii',
+                'encode-b64': 'btn-encode-b64',
+                'encode-qp': 'btn-encode-qp',
+                'encode-utf32': 'btn-encode-utf32'
+            };
+
+            Object.values(btnMap).forEach(id => {
+                const btn = document.getElementById(id);
+                if (btn) btn.classList.remove('btn-selected-decode', 'btn-selected-stricthex', 'btn-selected-ascii', 'btn-selected-b64', 'btn-selected-qp', 'btn-selected-utf32');
+            });
+
+            const activeBtn = document.getElementById(btnMap[mode]);
+            if (activeBtn) {
+                const classMap = {
+                    'decode': 'btn-selected-decode',
+                    'encode-stricthex': 'btn-selected-stricthex',
+                    'encode-ascii': 'btn-selected-ascii',
+                    'encode-b64': 'btn-selected-b64',
+                    'encode-qp': 'btn-selected-qp',
+                    'encode-utf32': 'btn-selected-utf32'
+                };
+                activeBtn.classList.add(classMap[mode]);
+            }
+        }
+
+        function decodeMimeSubject(text) {
+            let src = text.trim();
+            const regex = /=\?([^?]+)\?([BQbq])\?([^?]+)\?=/g;
+            if (regex.test(src)) {
+                return src.replace(/=\?([^?]+)\?([BQbq])\?([^?]+)\?=/g, (match, charset, encoding, data) => {
+                    const enc = encoding.toUpperCase();
+                    const cs = charset.toUpperCase();
+
+                    if (enc === 'B') {
+                        const binary = atob(data);
+                        const bytes = Uint8Array.from(binary, char => char.charCodeAt(0));
+
+                        if (cs.includes('UTF-32')) {
+                            let result = '';
+                            for (let i = 0; i < bytes.length; i += 4) {
+                                const codePoint = (bytes[i] << 24) | (bytes[i + 1] << 16) | (bytes[i + 2] << 8) | bytes[i + 3];
+                                result += String.fromCodePoint(codePoint);
+                            }
+                            return result;
+                        } else {
+                            return new TextDecoder(charset).decode(bytes);
+                        }
+                    } else if (enc === 'Q') {
+                        let qpDecoded = data.replace(/_/g, ' ');
+                        qpDecoded = qpDecoded.replace(/=([0-9A-Fa-f]{2})/g, (_, hex) => String.fromCharCode(parseInt(hex, 16)));
+                        const bytes = Uint8Array.from(qpDecoded, char => char.charCodeAt(0));
+                        return new TextDecoder(charset).decode(bytes);
+                    }
+                    return match;
+                });
+            }
+
+            let qpDecoded = src.replace(/_/g, ' ');
+            qpDecoded = qpDecoded.replace(/=([0-9A-Fa-f]{2})/g, (_, hex) => String.fromCharCode(parseInt(hex, 16)));
+            const bytes = Uint8Array.from(qpDecoded, char => char.charCodeAt(0));
+            return new TextDecoder('utf-8').decode(bytes);
+        }
+
+        function encodeStrictHexSubject(text) {
+            const bytes = new TextEncoder().encode(text);
+            let hexStr = '';
+            bytes.forEach(byte => { hexStr += '=' + byte.toString(16).toUpperCase().padStart(2, '0'); });
+            return `=?utf-8?q?${hexStr}?=`;
+        }
+
+        function encodeASCIISubject(text) {
+            let qp = '';
+            for (let i = 0; i < text.length; i++) {
+                const code = text.charCodeAt(i);
+                if (code > 127) qp += '=' + code.toString(16).toUpperCase().padStart(2, '0');
+                else if (code === 32) qp += '_';
+                else if ((code >= 48 && code <= 57) || (code >= 65 && code <= 90) || (code >= 97 && code <= 122)) qp += text.charAt(i);
+                else qp += '=' + code.toString(16).toUpperCase().padStart(2, '0');
+            }
+            return `=?us-ascii?Q?${qp}?=`;
+        }
+
+        function encodeBase64Subject(text) {
+            const bytes = new TextEncoder().encode(text);
+            let binary = '';
+            bytes.forEach(b => binary += String.fromCharCode(b));
+            return `=?UTF-8?B?${btoa(binary)}?=`;
+        }
+
+        function encodeQPSubject(text) {
+            const bytes = new TextEncoder().encode(text);
+            let qp = '';
+            bytes.forEach(byte => {
+                if (byte === 32) qp += '_';
+                else if ((byte >= 48 && byte <= 57) || (byte >= 65 && byte <= 90) || (byte >= 97 && byte <= 122)) qp += String.fromCharCode(byte);
+                else qp += '=' + byte.toString(16).toUpperCase().padStart(2, '0');
+            });
+            return `=?UTF-8?Q?${qp}?=`;
+        }
+
+        function encodeUTF32Subject(text) {
+            const codePoints = Array.from(text).map(c => c.codePointAt(0));
+            const bytes = new Uint8Array(codePoints.length * 4);
+            codePoints.forEach((cp, index) => {
+                const offset = index * 4;
+                bytes[offset]     = (cp >> 24) & 0xFF;
+                bytes[offset + 1] = (cp >> 16) & 0xFF;
+                bytes[offset + 2] = (cp >> 8)  & 0xFF;
+                bytes[offset + 3] = cp & 0xFF;
+            });
+            let binary = '';
+            bytes.forEach(b => binary += String.fromCharCode(b));
+            return `=?UTF-32?B?${btoa(binary)}?=`;
+        }
+
+        function copyOutputEmail() {
+            const output = document.getElementById('outputTextEmail');
+            if (!output.value) return;
+            copyTextToClipboard(output.value);
+            showToast("Result copied to clipboard!");
+        }
+
+        async function pasteInputEmail() {
+            const inputField = document.getElementById('inputTextEmail');
+            try {
+                if (navigator.clipboard && navigator.clipboard.readText) {
+                    inputField.value = await navigator.clipboard.readText();
+                } else {
+                    showToast("Press Ctrl+V / Cmd+V to paste manually", "warning");
+                }
+            } catch (err) {
+                showToast("Press Ctrl+V / Cmd+V to paste manually", "warning");
+            }
+        }
+
+        /* --------------------------------------------------------------------------
+           4. FANCY TEXT GENERATOR LOGIC
+           -------------------------------------------------------------------------- */
+        const NORMAL_CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+        function createCharMap(from, to) {
+            const map = {};
+            const fromArr = Array.from(from);
+            const toArr = Array.from(to);
+            for (let i = 0; i < fromArr.length; i++) {
+                if (toArr[i]) map[fromArr[i]] = toArr[i];
+            }
+            return map;
+        }
+
+        function createOffsetCharMap({ lowerStart, upperStart, numStart = null, exceptions = {} }) {
+            const map = {};
+            if (lowerStart) {
+                for (let i = 0; i < 26; i++) {
+                    const char = String.fromCharCode(97 + i);
+                    map[char] = exceptions[char] || String.fromCodePoint(lowerStart + i);
+                }
+            }
+            if (upperStart) {
+                for (let i = 0; i < 26; i++) {
+                    const char = String.fromCharCode(65 + i);
+                    map[char] = exceptions[char] || String.fromCodePoint(upperStart + i);
+                }
+            }
+            if (numStart) {
+                for (let i = 0; i < 10; i++) {
+                    const char = String(i);
+                    map[char] = String.fromCodePoint(numStart + i);
+                }
+            }
+            return map;
+        }
+
+        const FancyMappings = {
+            boldSerif: createOffsetCharMap({ lowerStart: 0x1D41A, upperStart: 0x1D400, numStart: 0x1D7CE }),
+            italicSerif: createOffsetCharMap({ lowerStart: 0x1D44E, upperStart: 0x1D434, exceptions: { 'h': 'ℎ' } }),
+            boldItalicSerif: createOffsetCharMap({ lowerStart: 0x1D482, upperStart: 0x1D468 }),
+            script: createOffsetCharMap({ lowerStart: 0x1D4B6, upperStart: 0x1D49C, exceptions: { 'e': 'ℯ', 'g': 'ℊ', 'o': 'ℴ', 'B': 'ℬ', 'E': 'ℰ', 'F': 'ℱ', 'H': 'ℋ', 'I': 'ℐ', 'L': 'ℒ', 'M': 'ℳ', 'R': 'ℛ' } }),
+            boldScript: createOffsetCharMap({ lowerStart: 0x1D4EA, upperStart: 0x1D4D0 }),
+            gothic: createOffsetCharMap({ lowerStart: 0x1D51E, upperStart: 0x1D504, exceptions: { 'C': 'ℭ', 'H': 'ℌ', 'I': 'ℑ', 'R': 'ℜ', 'Z': 'ℨ' } }),
+            boldGothic: createOffsetCharMap({ lowerStart: 0x1D552, upperStart: 0x1D538 }),
+            doubleStruck: createOffsetCharMap({ lowerStart: 0x1D552, upperStart: 0x1D538, numStart: 0x1D7D8, exceptions: { 'C': 'ℂ', 'H': 'ℍ', 'N': 'ℕ', 'P': 'ℙ', 'Q': 'ℚ', 'R': 'ℝ', 'Z': 'ℤ' } }),
+            sansRegular: createOffsetCharMap({ lowerStart: 0x1D5BA, upperStart: 0x1D5A0, numStart: 0x1D7E2 }),
+            sansBold: createOffsetCharMap({ lowerStart: 0x1D5EE, upperStart: 0x1D5D4, numStart: 0x1D7EC }),
+            sansItalic: createOffsetCharMap({ lowerStart: 0x1D622, upperStart: 0x1D608 }),
+            sansBoldItalic: createOffsetCharMap({ lowerStart: 0x1D656, upperStart: 0x1D63C }),
+            monospace: createOffsetCharMap({ lowerStart: 0x1D68A, upperStart: 0x1D670, numStart: 0x1D7F6 }),
+            circled: createCharMap(NORMAL_CHARS, "ⓐⓑⓒⓓⓔⓕⓖⓗⓘⓙⓚⓛⓜⓝⓞⓟⓠⓡⓢⓣⓤⓥⓦⓧⓨⓩⒶⒷⒸⒹⒺⒻⒼⒽⒾⒿⓀⓁⓂⓃⓄⓅⓆⓇⓈⓉⓊⓋⓌⓍⓎⓏ⓪①②③④⑤⑥⑦⑧⑨"),
+            circledDark: createCharMap(NORMAL_CHARS, "🅐🅑🅒🅓🅔🅕🅖🅑🅘🅙🅚🅛🅜🅝🅞🅟🅠🅡🅢🅣🅤🅥🅦🅧🅨🅩🅐🅑Ⓒⅅ🅔貴🅖⅁🅘🅙🅚🅛🅜🅝🅞🅟🅠🅡🅢🅣🅤🅥🅦🅧🅨🅩⓿❶❷❸❹❺❻❼❽❾"),
+            squared: createCharMap(NORMAL_CHARS, "🄰🄱🄲🄳🄴🄵🄶🄷🄸🄹🄺🄻🄼BD🄾🄿🅄🅁🅈🅉🄰🄱🄲🄳🄴🄵🄶🄷🄸🄹🄺🄻🄼BD🄾🄿🅄🅁🅈🅉0123456789"),
+            smallCaps: createCharMap("abcdefghijklmnopqrstuvwxyz", "ᴀʙᴄᴅᴇꜰɢʜɪᴊᴋʟᴍɴᴏᴘǫʀꜱᴛᴜᴠᴡxʏᴢ"),
+            superscript: createCharMap(NORMAL_CHARS, "ᵃᵇᶜᵈᵉᶠᵍʰⁱʲᵏˡᵐⁿᵒᵖqʳˢᵗᵘᵛʷˣʸᶻᴬᴮᶜᴰᴱᶠᴳᴴᴵᴶᴷᴸᴹᴺᴼᴾQᴿˢᵀᵁⱽᵂˣʸᶻ⁰¹²³⁴⁵⁶⁷⁸⁹"),
+            subscript: createCharMap("abcdefghijklmnopqrstuvwxyz0123456789", "ₐᵦ𝒸𝒹ₑfgₕᵢⱼₖₗₘₙₒₚqᵣₛₜᵤᵥ𝓌ₓᵧ₂₀₁₂₃₄₅₆₇₈₉"),
+            fullWidth: createCharMap(NORMAL_CHARS, "ａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺ０１２３４５６７８９"),
+            parentheses: createCharMap("abcdefghijklmnopqrstuvwxyz0123456789", "⒜⒝⒞⒟⒠⒡⒢⒣⒤⒥⒦⒧⒨⒩⒪⒫⒬⒭⒮⒯⒰⒱⒲⒳⒴⒵⑴⑵⑶⑷⑸⑹⑺⑻⑼"),
+            upsideDown: createCharMap(
+                "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,?!'\"_()",
+                "ɐqɔpǝɟƃɥᴉɾʞlɯuodbɹsʇnʌʍxʎz∀ꓒϽꓷƎℲ⅁HInꓘꓞWNOꓒꓯꓤSꓕ∩ΛMX⅄Z0⇂ᄅƐㄣϛ9ㄥ86˙'¿¡,„‾)("
+            )
+        };
+
+        function applyFancyMap(text, map, reverse = false) {
+            let res = text.split('').map(char => map[char] || char).join('');
+            return reverse ? res.split('').reverse().join('') : res;
+        }
+
+        function generateGlitchText(text, level = 5) {
+            const combiningAbove = ['\u0300', '\u0301', '\u0302', '\u0303', '\u0304', '\u0305', '\u0306', '\u0307', '\u0308', '\u0309', '\u030A', '\u030B'];
+            const combiningBelow = ['\u0316', '\u0317', '\u0318', '\u0319', '\u031C', '\u031D', '\u031E', '\u031F', '\u0320', '\u0321'];
+            return text.split('').map(char => {
+                if (char === ' ') return ' ';
+                let z = char;
+                for (let i = 0; i < Math.floor(level / 2); i++) {
+                    z += combiningAbove[Math.floor(Math.random() * combiningAbove.length)];
+                    z += combiningBelow[Math.floor(Math.random() * combiningBelow.length)];
+                }
+                return z;
+            }).join('');
+        }
+
+        const FANCY_CATEGORIES = ['All', 'Favorites', 'Cool', 'Fancy', 'Cursive', 'Small', 'Bold', 'Glitch', 'Symbols', 'Text Art'];
+
+        const FANCY_FONT_STYLES = [
+            { id: 'bold-serif', name: 'Bold Serif', category: 'Bold', transform: (t) => applyFancyMap(t, FancyMappings.boldSerif) },
+            { id: 'sans-bold', name: 'Sans Serif Bold', category: 'Bold', transform: (t) => applyFancyMap(t, FancyMappings.sansBold) },
+            { id: 'bold-italic-serif', name: 'Bold Italic Serif', category: 'Bold', transform: (t) => applyFancyMap(t, FancyMappings.boldItalicSerif) },
+            { id: 'sans-bold-italic', name: 'Sans Bold Italic', category: 'Bold', transform: (t) => applyFancyMap(t, FancyMappings.sansBoldItalic) },
+            { id: 'bold-gothic', name: 'Gothic Blackletter Bold', category: 'Bold', transform: (t) => applyFancyMap(t, FancyMappings.boldGothic) },
+            { id: 'italic-serif', name: 'Italic Serif', category: 'Fancy', transform: (t) => applyFancyMap(t, FancyMappings.italicSerif) },
+            { id: 'gothic', name: 'Fraktur Gothic', category: 'Fancy', transform: (t) => applyFancyMap(t, FancyMappings.gothic) },
+            { id: 'monospace', name: 'Monospace Code', category: 'Fancy', transform: (t) => applyFancyMap(t, FancyMappings.monospace) },
+            { id: 'sans-italic', name: 'Sans Italic', category: 'Fancy', transform: (t) => applyFancyMap(t, FancyMappings.sansItalic) },
+            { id: 'script', name: 'Cursive Script', category: 'Cursive', transform: (t) => applyFancyMap(t, FancyMappings.script) },
+            { id: 'bold-script', name: 'Mathematical Bold Script', category: 'Cursive', transform: (t) => applyFancyMap(t, FancyMappings.boldScript) },
+            { id: 'double-struck', name: 'Double Struck / Blackboard', category: 'Cool', transform: (t) => applyFancyMap(t, FancyMappings.doubleStruck) },
+            { id: 'circled', name: 'Bubbles Light', category: 'Cool', transform: (t) => applyFancyMap(t, FancyMappings.circled) },
+            { id: 'circled-dark', name: 'Bubbles Dark Filled', category: 'Cool', transform: (t) => applyFancyMap(t, FancyMappings.circledDark) },
+            { id: 'squared', name: 'Square Outline', category: 'Cool', transform: (t) => applyFancyMap(t, FancyMappings.squared) },
+            { id: 'full-width', name: 'Vaporwave Full Width', category: 'Cool', transform: (t) => applyFancyMap(t, FancyMappings.fullWidth) },
+            { id: 'parentheses', name: 'Parentheses Enclosed', category: 'Cool', transform: (t) => applyFancyMap(t, FancyMappings.parentheses) },
+            { id: 'upside-down', name: 'Upside Down', category: 'Cool', transform: (t) => applyFancyMap(t, FancyMappings.upsideDown, true) },
+            { id: 'small-caps', name: 'Small Caps', category: 'Small', transform: (t) => applyFancyMap(t, FancyMappings.smallCaps) },
+            { id: 'superscript', name: 'Superscript Tiny', category: 'Small', transform: (t) => applyFancyMap(t, FancyMappings.superscript) },
+            { id: 'subscript', name: 'Subscript Low', category: 'Small', transform: (t) => applyFancyMap(t, FancyMappings.subscript) },
+            { id: 'glitch-zalgo', name: 'Zalgo Cyber Glitch', category: 'Glitch', transform: (t, level) => generateGlitchText(t, level) },
+            { id: 'sparkles-wrap', name: 'Sparkles Enclosed', category: 'Symbols', transform: (t) => `✨ ${t} ✨` },
+            { id: 'wings-symbol', name: 'Angel Wings Decor', category: 'Symbols', transform: (t) => `꧁༺ ${t} ༻꧂` },
+            { id: 'hearts-wrap', name: 'Heart Accent', category: 'Symbols', transform: (t) => `♥ ${t.split('').join(' ♥ ')} ♥` },
+            { id: 'brackets-jp', name: 'Japanese Bold Brackets', category: 'Symbols', transform: (t) => `【 ${t} 】` },
+            { id: 'fire-decor', name: 'Fire Flames', category: 'Symbols', transform: (t) => `🔥 ${t} 🔥` },
+            { id: 'art-banner-1', name: 'Aesthetic Line Banner', category: 'Text Art', transform: (t) => `═════════[{ ${t} }]═════════` },
+            { id: 'art-banner-2', name: 'Starry Sky Divider', category: 'Text Art', transform: (t) => `✧･ﾟ: *✧･ﾟ:*  ${t}  *:･ﾟ✧*:･ﾟ✧` },
+            { id: 'art-banner-3', name: 'Retro Box Border', category: 'Text Art', transform: (t) => `┌───────────────────────┐\n  ${t}\n└───────────────────────┘` }
+        ];
+
+        const FANCY_PROMPTS = ["FANCY DESIGN", "Aesthetic Vibe", "Stay Creative", "Digital Nomad", "Cyberpunk 2077", "Follow My Journey", "Dreamer & Creator"];
+
+        let fancyActiveCat = "All";
+        let fancySearchQuery = "";
+        let fancyGlitchLevel = 5;
+        let fancyFavorites = new Set(JSON.parse(localStorage.getItem('fancy_favs') || '[]'));
+
+        function initFancyTool() {
+            renderFancyCategoryTabs();
+            renderFancyGrid();
+
+            document.getElementById('fancy-main-input').addEventListener('input', () => {
+                updateFancyCounts();
+                renderFancyGrid();
+            });
+
+            document.getElementById('fancy-glitch-slider').addEventListener('input', (e) => {
+                fancyGlitchLevel = parseInt(e.target.value);
+                document.getElementById('fancy-glitch-val').textContent = fancyGlitchLevel;
+                renderFancyGrid();
+            });
+
+            document.getElementById('fancy-font-search').addEventListener('input', (e) => {
+                fancySearchQuery = e.target.value;
+                renderFancyGrid();
+            });
+        }
+
+        function renderFancyCategoryTabs() {
+            const tabsContainer = document.getElementById('fancy-category-tabs');
+            tabsContainer.innerHTML = FANCY_CATEGORIES.map(cat => {
+                const isActive = cat === fancyActiveCat;
+                const starIcon = cat === 'Favorites' ? '<i class="fa-solid fa-star text-amber-400 mr-1.5"></i>' : '';
+                return `
+                    <button onclick="setFancyCategory('${cat}')" class="px-3 py-1.5 rounded-xl text-xs font-semibold font-mono transition flex items-center whitespace-nowrap ${
+                        isActive 
+                        ? 'bg-purple-600 text-white shadow-lg' 
+                        : 'theme-card text-slate-400 hover:text-slate-200 border'
+                    }">
+                        ${starIcon}${cat}
+                    </button>
+                `;
+            }).join('');
+        }
+
+        function setFancyCategory(cat) {
+            fancyActiveCat = cat;
+            renderFancyCategoryTabs();
+            renderFancyGrid();
+        }
+
+        function renderFancyGrid() {
+            const inputVal = document.getElementById('fancy-main-input').value || "FANCY DESIGN";
+            const grid = document.getElementById('fancy-font-grid');
+
+            const filtered = FANCY_FONT_STYLES.filter(font => {
+                const matchesCat = fancyActiveCat === 'All' ? true :
+                                   fancyActiveCat === 'Favorites' ? fancyFavorites.has(font.id) :
+                                   font.category === fancyActiveCat;
+                const matchesQuery = font.name.toLowerCase().includes(fancySearchQuery.toLowerCase());
+                return matchesCat && matchesQuery;
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `<div class="col-span-full py-16 text-center theme-text-muted text-xs">No matching font styles found</div>`;
+                return;
+            }
+
+            grid.innerHTML = filtered.map(font => {
+                const transformed = font.transform(inputVal, fancyGlitchLevel);
+                const isFav = fancyFavorites.has(font.id);
+
+                return `
+                    <div class="fancy-card theme-card rounded-2xl p-4 flex flex-col justify-between group">
+                        <div>
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-[10px] font-bold font-mono uppercase px-2 py-0.5 rounded bg-purple-500/10 text-purple-300 border border-purple-500/20">${font.category}</span>
+                                <div class="flex items-center gap-1.5">
+                                    <span class="text-xs font-bold theme-text-muted font-mono">${font.name}</span>
+                                    <button onclick="toggleFancyFav('${font.id}')" class="p-1 text-slate-500 hover:text-amber-400 transition">
+                                        <i class="${isFav ? 'fa-solid text-amber-400' : 'fa-regular'} fa-star text-xs"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="theme-text-main text-sm sm:text-base break-words line-clamp-4 min-h-[3rem] py-1 select-all font-sans">
+                                ${escapeHtml(transformed)}
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-end pt-3 mt-2 border-t theme-border">
+                            <button onclick="copyFancyText(\`${escapeHtml(transformed)}\`)" class="px-3 py-1.5 bg-purple-600 hover:bg-purple-500 text-white text-xs font-mono font-bold rounded-xl transition flex items-center gap-1.5 active:scale-95 shadow">
+                                <i class="fa-regular fa-copy"></i> Copy
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function toggleFancyFav(id) {
+            if (fancyFavorites.has(id)) {
+                fancyFavorites.delete(id);
+                showToast("Removed from favorites");
+            } else {
+                fancyFavorites.add(id);
+                showToast("Added to favorites ⭐");
+            }
+            localStorage.setItem('fancy_favs', JSON.stringify([...fancyFavorites]));
+            renderFancyGrid();
+        }
+
+        function updateFancyCounts() {
+            const val = document.getElementById('fancy-main-input').value;
+            document.getElementById('fancy-char-count').textContent = `${val.length} chars`;
+            const words = val.trim() ? val.trim().split(/\s+/).length : 0;
+            document.getElementById('fancy-word-count').textContent = `${words} words`;
+        }
+
+        function clearFancyInput() {
+            document.getElementById('fancy-main-input').value = '';
+            updateFancyCounts();
+            renderFancyGrid();
+            showToast("Cleared input box");
+        }
+
+        function inspireFancyText() {
+            const rand = FANCY_PROMPTS[Math.floor(Math.random() * FANCY_PROMPTS.length)];
+            document.getElementById('fancy-main-input').value = rand;
+            updateFancyCounts();
+            renderFancyGrid();
+            showToast("Generated inspired prompt ✨");
+        }
+
+        function wrapFancyText(template) {
+            const val = document.getElementById('fancy-main-input').value || "FANCY DESIGN";
+            document.getElementById('fancy-main-input').value = template.replace('{t}', val);
+            updateFancyCounts();
+            renderFancyGrid();
+            showToast("Wrapped text!");
+        }
+
+        function copyFancyText(text) {
+            copyTextToClipboard(text);
+            showToast("Copied styled text to clipboard! 🚀");
+        }
+
+        function escapeHtml(str) {
+            return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+        }
+
+        /* --------------------------------------------------------------------------
+           5. RANDOM WORD GENERATOR LOGIC
            -------------------------------------------------------------------------- */
         const CHAR_LOWER = 'abcdefghijklmnopqrstuvwxyz';
         const CHAR_UPPER = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -1241,6 +1609,7 @@
 
         // Initialize Workspace On Load
         window.onload = function() {
+            initFancyTool();
             generateUniqueWords();
         };
     </script>
