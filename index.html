@@ -71,10 +71,6 @@
             color: var(--text-main);
             font-family: 'Inter', sans-serif;
             transition: background-color 0.25s ease, color 0.25s ease;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
         }
 
         /* Allow Selection Inside Inputs and Textareas */
@@ -619,7 +615,7 @@
     </div>
 
     <script>
-        // Disable Context Menu Globally
+        // Disable Right Click ONLY (Left Click Remains Fully Functional)
         document.addEventListener('contextmenu', (e) => e.preventDefault());
 
         /* --------------------------------------------------------------------------
@@ -1268,7 +1264,7 @@
             boldSerif: createOffsetCharMap({ lowerStart: 0x1D41A, upperStart: 0x1D400, numStart: 0x1D7CE }),
             italicSerif: createOffsetCharMap({ lowerStart: 0x1D44E, upperStart: 0x1D434, exceptions: { 'h': 'ℎ' } }),
             boldItalicSerif: createOffsetCharMap({ lowerStart: 0x1D482, upperStart: 0x1D468 }),
-            script: createOffsetCharMap({ lowerStart: 0x1D4B6, upperStart: 0x1D49C, exceptions: { 'e': 'ℯ', 'g': 'ℊ', 'o': 'ℴ', 'B': 'ℬ', 'E': 'ℰ', 'F': 'ℱ', 'H': 'ℋ', 'I': 'ℐ', 'L': 'ℒ', 'M': 'ℳ', 'R': 'ℛ' } }),
+            script: createOffsetCharMap({ lowerStart: 0x1D4B6, upperStart: 0x1D49C, exceptions: { 'e': 'ℯ', 'g': 'ℊ', 'o': 'ℴ', 'B': 'ℬ', 'E': 'ℰ', 'F': 'ℱ', 'H': 'ℋ', 'I': 'ℑ', 'L': 'ℒ', 'M': 'ℳ', 'R': 'ℛ' } }),
             boldScript: createOffsetCharMap({ lowerStart: 0x1D4EA, upperStart: 0x1D4D0 }),
             gothic: createOffsetCharMap({ lowerStart: 0x1D51E, upperStart: 0x1D504, exceptions: { 'C': 'ℭ', 'H': 'ℌ', 'I': 'ℑ', 'R': 'ℜ', 'Z': 'ℨ' } }),
             boldGothic: createOffsetCharMap({ lowerStart: 0x1D552, upperStart: 0x1D538 }),
@@ -1354,7 +1350,6 @@
 
         function renderFancyCategoryTabs() {
             const tabsContainer = document.getElementById('fancy-category-tabs');
-            const isLight = document.body.classList.contains('light-theme');
             tabsContainer.innerHTML = FANCY_CATEGORIES.map(cat => {
                 const isActive = cat === fancyActiveCat;
                 const starIcon = cat === 'Favorites' ? '<i class="fa-solid fa-star text-amber-400 mr-1.5"></i>' : '';
