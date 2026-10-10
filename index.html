@@ -43,6 +43,8 @@
             --badge-bg: #1e293b;
             --hover-row: #1e293b;
             --scrollbar-thumb: #334155;
+            --fancy-card-bg: rgba(30, 41, 59, 0.4);
+            --fancy-card-hover-border: rgba(168, 85, 247, 0.5);
         }
 
         body.light-theme {
@@ -51,7 +53,7 @@
             --bg-card: #ffffff;
             --bg-input: #f8fafc;
             --bg-header: #ffffff;
-            --border-color: #e2e8f0;
+            --border-color: #cbd5e1;
             --text-main: #0f172a;
             --text-muted: #64748b;
             --text-accent: #0284c7;
@@ -60,6 +62,8 @@
             --badge-bg: #e2e8f0;
             --hover-row: #f8fafc;
             --scrollbar-thumb: #cbd5e1;
+            --fancy-card-bg: #ffffff;
+            --fancy-card-hover-border: #a855f7;
         }
 
         body {
@@ -67,13 +71,13 @@
             color: var(--text-main);
             font-family: 'Inter', sans-serif;
             transition: background-color 0.25s ease, color 0.25s ease;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
+            /* Allow Selection globally for left click drag & copy */
+            -webkit-user-select: text !important;
+            -moz-user-select: text !important;
+            -ms-user-select: text !important;
+            user-select: text !important;
         }
 
-        /* Allow Selection Inside Inputs and Textareas */
         textarea, input {
             -webkit-user-select: text !important;
             -moz-user-select: text !important;
@@ -114,12 +118,12 @@
 
         /* Fancy Cards styling */
         .fancy-card {
-            background: rgba(30, 41, 59, 0.4);
+            background-color: var(--fancy-card-bg);
             border: 1px solid var(--border-color);
             transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .fancy-card:hover {
-            border-color: rgba(168, 85, 247, 0.5);
+            border-color: var(--fancy-card-hover-border);
             box-shadow: 0 10px 25px -10px rgba(168, 85, 247, 0.25);
             transform: translateY(-2px);
         }
@@ -181,7 +185,7 @@
                     </div>
                     <div class="text-left truncate">
                         <div class="truncate">Fancy Text Generator</div>
-                        <div class="text-[10px] font-normal theme-text-muted truncate">Unicode Fonts, Art & Glitch</div>
+                        <div class="text-[10px] font-normal theme-text-muted truncate">Unicode Fonts & Text Art</div>
                     </div>
                 </button>
 
@@ -435,10 +439,10 @@
                     <h2 class="text-xl font-bold theme-text-main flex items-center gap-2">
                         <i class="fa-solid fa-wand-magic-sparkles text-purple-400"></i> Next-Gen Fancy Font & Unicode Text Generator
                     </h2>
-                    <p class="text-xs theme-text-muted mt-1">Transform plain text into stylish Unicode fonts, aesthetic symbols, and glitch styles.</p>
+                    <p class="text-xs theme-text-muted mt-1">Transform plain text into stylish Unicode fonts and aesthetic symbols.</p>
                 </div>
                 <div class="flex gap-2">
-                    <button id="btn-fancy-inspire" onclick="inspireFancyText()" class="px-3 py-1.5 text-xs font-semibold rounded-xl theme-card border hover:border-purple-500 text-purple-300 transition flex items-center gap-1.5">
+                    <button id="btn-fancy-inspire" onclick="inspireFancyText()" class="px-3 py-1.5 text-xs font-semibold rounded-xl theme-card border hover:border-purple-500 theme-text-main transition flex items-center gap-1.5">
                         <i class="fa-solid fa-wand-magic-sparkles text-purple-400"></i> Inspire Me
                     </button>
                 </div>
@@ -463,23 +467,13 @@
                     </button>
                 </div>
 
-                <!-- Customization Toolbar -->
-                <div class="flex flex-wrap items-center justify-between gap-4 pt-2 border-t theme-border">
-                    <div class="flex items-center gap-3 theme-card px-3.5 py-1.5 rounded-xl border">
-                        <span class="text-xs font-semibold theme-text-main flex items-center gap-1.5 font-mono">
-                            <i class="fa-solid fa-bolt text-amber-400"></i> ZALGO INTENSITY:
-                        </span>
-                        <input type="range" id="fancy-glitch-slider" min="1" max="15" value="5" class="w-24 sm:w-32 accent-purple-500 cursor-pointer">
-                        <span id="fancy-glitch-val" class="text-xs font-mono font-bold text-purple-400 w-4">5</span>
-                    </div>
-
-                    <div class="flex items-center gap-2 overflow-x-auto py-1 custom-scrollbar">
-                        <span class="text-xs font-mono theme-text-muted whitespace-nowrap">WRAP:</span>
-                        <button class="text-xs px-2.5 py-1 rounded-lg theme-card border hover:border-purple-500 text-slate-300 transition" onclick="wrapFancyText('✨ {t} ✨')">✨ Sparkles</button>
-                        <button class="text-xs px-2.5 py-1 rounded-lg theme-card border hover:border-purple-500 text-slate-300 transition" onclick="wrapFancyText('꧁༺ {t} ༻꧂')">꧁ Wings</button>
-                        <button class="text-xs px-2.5 py-1 rounded-lg theme-card border hover:border-purple-500 text-slate-300 transition" onclick="wrapFancyText('♥ {t} ♥')">♥ Hearts</button>
-                        <button class="text-xs px-2.5 py-1 rounded-lg theme-card border hover:border-purple-500 text-slate-300 transition" onclick="wrapFancyText('【 {t} 】')">【 Box 】</button>
-                    </div>
+                <!-- Symbol Quick Wrappers Toolbar -->
+                <div class="flex items-center gap-2 overflow-x-auto py-1 custom-scrollbar border-t theme-border pt-2">
+                    <span class="text-xs font-mono theme-text-muted whitespace-nowrap">WRAP:</span>
+                    <button class="text-xs px-2.5 py-1 rounded-lg theme-card border hover:border-purple-500 theme-text-main transition" onclick="wrapFancyText('✨ {t} ✨')">✨ Sparkles</button>
+                    <button class="text-xs px-2.5 py-1 rounded-lg theme-card border hover:border-purple-500 theme-text-main transition" onclick="wrapFancyText('꧁༺ {t} ༻꧂')">꧁ Wings</button>
+                    <button class="text-xs px-2.5 py-1 rounded-lg theme-card border hover:border-purple-500 theme-text-main transition" onclick="wrapFancyText('♥ {t} ♥')">♥ Hearts</button>
+                    <button class="text-xs px-2.5 py-1 rounded-lg theme-card border hover:border-purple-500 theme-text-main transition" onclick="wrapFancyText('【 {t} 】')">【 Box 】</button>
                 </div>
             </div>
 
@@ -625,9 +619,6 @@
     </div>
 
     <script>
-        // Disable Context Menu Globally
-        document.addEventListener('contextmenu', (e) => e.preventDefault());
-
         /* --------------------------------------------------------------------------
            1. PORTAL SWITCHING & DYNAMIC THEME ENGINE
            -------------------------------------------------------------------------- */
@@ -653,6 +644,8 @@
             const isLight = body.classList.toggle('light-theme');
 
             icon.className = isLight ? 'fa-solid fa-moon text-indigo-600 text-sm' : 'fa-solid fa-sun text-amber-400 text-sm';
+            renderFancyCategoryTabs();
+            renderFancyGrid();
             showToast(isLight ? 'Light Theme Activated' : 'Dark Theme Activated');
         }
 
@@ -1301,21 +1294,7 @@
             return reverse ? res.split('').reverse().join('') : res;
         }
 
-        function generateGlitchText(text, level = 5) {
-            const combiningAbove = ['\u0300', '\u0301', '\u0302', '\u0303', '\u0304', '\u0305', '\u0306', '\u0307', '\u0308', '\u0309', '\u030A', '\u030B'];
-            const combiningBelow = ['\u0316', '\u0317', '\u0318', '\u0319', '\u031C', '\u031D', '\u031E', '\u031F', '\u0320', '\u0321'];
-            return text.split('').map(char => {
-                if (char === ' ') return ' ';
-                let z = char;
-                for (let i = 0; i < Math.floor(level / 2); i++) {
-                    z += combiningAbove[Math.floor(Math.random() * combiningAbove.length)];
-                    z += combiningBelow[Math.floor(Math.random() * combiningBelow.length)];
-                }
-                return z;
-            }).join('');
-        }
-
-        const FANCY_CATEGORIES = ['All', 'Favorites', 'Cool', 'Fancy', 'Cursive', 'Small', 'Bold', 'Glitch', 'Symbols', 'Text Art'];
+        const FANCY_CATEGORIES = ['All', 'Favorites', 'Cool', 'Fancy', 'Cursive', 'Small', 'Bold', 'Symbols', 'Text Art'];
 
         const FANCY_FONT_STYLES = [
             { id: 'bold-serif', name: 'Bold Serif', category: 'Bold', transform: (t) => applyFancyMap(t, FancyMappings.boldSerif) },
@@ -1339,7 +1318,6 @@
             { id: 'small-caps', name: 'Small Caps', category: 'Small', transform: (t) => applyFancyMap(t, FancyMappings.smallCaps) },
             { id: 'superscript', name: 'Superscript Tiny', category: 'Small', transform: (t) => applyFancyMap(t, FancyMappings.superscript) },
             { id: 'subscript', name: 'Subscript Low', category: 'Small', transform: (t) => applyFancyMap(t, FancyMappings.subscript) },
-            { id: 'glitch-zalgo', name: 'Zalgo Cyber Glitch', category: 'Glitch', transform: (t, level) => generateGlitchText(t, level) },
             { id: 'sparkles-wrap', name: 'Sparkles Enclosed', category: 'Symbols', transform: (t) => `✨ ${t} ✨` },
             { id: 'wings-symbol', name: 'Angel Wings Decor', category: 'Symbols', transform: (t) => `꧁༺ ${t} ༻꧂` },
             { id: 'hearts-wrap', name: 'Heart Accent', category: 'Symbols', transform: (t) => `♥ ${t.split('').join(' ♥ ')} ♥` },
@@ -1354,7 +1332,6 @@
 
         let fancyActiveCat = "All";
         let fancySearchQuery = "";
-        let fancyGlitchLevel = 5;
         let fancyFavorites = new Set(JSON.parse(localStorage.getItem('fancy_favs') || '[]'));
 
         function initFancyTool() {
@@ -1363,12 +1340,6 @@
 
             document.getElementById('fancy-main-input').addEventListener('input', () => {
                 updateFancyCounts();
-                renderFancyGrid();
-            });
-
-            document.getElementById('fancy-glitch-slider').addEventListener('input', (e) => {
-                fancyGlitchLevel = parseInt(e.target.value);
-                document.getElementById('fancy-glitch-val').textContent = fancyGlitchLevel;
                 renderFancyGrid();
             });
 
@@ -1387,7 +1358,7 @@
                     <button onclick="setFancyCategory('${cat}')" class="px-3 py-1.5 rounded-xl text-xs font-semibold font-mono transition flex items-center whitespace-nowrap ${
                         isActive 
                         ? 'bg-purple-600 text-white shadow-lg' 
-                        : 'theme-card text-slate-400 hover:text-slate-200 border'
+                        : 'theme-card theme-text-main border hover:border-purple-500'
                     }">
                         ${starIcon}${cat}
                     </button>
@@ -1419,17 +1390,17 @@
             }
 
             grid.innerHTML = filtered.map(font => {
-                const transformed = font.transform(inputVal, fancyGlitchLevel);
+                const transformed = font.transform(inputVal);
                 const isFav = fancyFavorites.has(font.id);
 
                 return `
-                    <div class="fancy-card theme-card rounded-2xl p-4 flex flex-col justify-between group">
+                    <div class="fancy-card rounded-2xl p-4 flex flex-col justify-between group">
                         <div>
                             <div class="flex items-center justify-between mb-2">
-                                <span class="text-[10px] font-bold font-mono uppercase px-2 py-0.5 rounded bg-purple-500/10 text-purple-300 border border-purple-500/20">${font.category}</span>
+                                <span class="text-[10px] font-bold font-mono uppercase px-2 py-0.5 rounded bg-purple-500/10 text-purple-400 border border-purple-500/20">${font.category}</span>
                                 <div class="flex items-center gap-1.5">
                                     <span class="text-xs font-bold theme-text-muted font-mono">${font.name}</span>
-                                    <button onclick="toggleFancyFav('${font.id}')" class="p-1 text-slate-500 hover:text-amber-400 transition">
+                                    <button onclick="toggleFancyFav('${font.id}')" class="p-1 text-slate-400 hover:text-amber-400 transition">
                                         <i class="${isFav ? 'fa-solid text-amber-400' : 'fa-regular'} fa-star text-xs"></i>
                                     </button>
                                 </div>
