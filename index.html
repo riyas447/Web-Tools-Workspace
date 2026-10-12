@@ -293,6 +293,9 @@
                         <input type="checkbox" id="chk-col-created" checked onchange="toggleDnsColumn('col-created')" class="rounded border-slate-700 text-emerald-500 me-2 dns-col-checkbox"> Creation Date
                     </label>
                     <label class="inline-flex items-center theme-input px-2.5 py-1.5 rounded-lg border cursor-pointer">
+                        <input type="checkbox" id="chk-col-updated" checked onchange="toggleDnsColumn('col-updated')" class="rounded border-slate-700 text-emerald-500 me-2 dns-col-checkbox"> Updated Date
+                    </label>
+                    <label class="inline-flex items-center theme-input px-2.5 py-1.5 rounded-lg border cursor-pointer">
                         <input type="checkbox" id="chk-col-expiry" checked onchange="toggleDnsColumn('col-expiry')" class="rounded border-slate-700 text-emerald-500 me-2 dns-col-checkbox"> Expiry Date
                     </label>
                     <label class="inline-flex items-center theme-input px-2.5 py-1.5 rounded-lg border cursor-pointer">
@@ -325,6 +328,7 @@
                                 <th onclick="sortDnsTable('ssl')" class="p-3 col-ssl min-w-[160px] cursor-pointer hover:opacity-80">SSL Status <span id="sort-ssl"></span></th>
                                 <th onclick="sortDnsTable('registrar')" class="p-3 col-registrar min-w-[150px] cursor-pointer hover:opacity-80">Registrar <span id="sort-registrar"></span></th>
                                 <th onclick="sortDnsTable('created')" class="p-3 col-created min-w-[130px] cursor-pointer hover:opacity-80">Creation Date <span id="sort-created"></span></th>
+                                <th onclick="sortDnsTable('updated')" class="p-3 col-updated min-w-[130px] cursor-pointer hover:opacity-80">Updated Date <span id="sort-updated"></span></th>
                                 <th onclick="sortDnsTable('expiry')" class="p-3 col-expiry min-w-[130px] cursor-pointer hover:opacity-80">Expiry Date <span id="sort-expiry"></span></th>
                                 <th onclick="sortDnsTable('ageDays')" class="p-3 col-age min-w-[140px] cursor-pointer hover:opacity-80">Domain Age <span id="sort-ageDays"></span></th>
                                 <th onclick="sortDnsTable('status')" class="p-3 col-public-status min-w-[160px] cursor-pointer hover:opacity-80">Public Status <span id="sort-status"></span></th>
@@ -333,7 +337,7 @@
                         </thead>
                         <tbody id="dnsResultsTableBody" class="font-mono">
                             <tr>
-                                <td colspan="16" class="text-center py-16 theme-text-muted font-sans">
+                                <td colspan="17" class="text-center py-16 theme-text-muted font-sans">
                                     <i class="fa-solid fa-table text-4xl mb-3 block opacity-40"></i>
                                     Enter domain names above and click <span class="text-emerald-400 font-semibold">"Check Records & Status"</span>
                                 </td>
@@ -716,6 +720,7 @@
             { id: 'chk-col-ssl', class: 'col-ssl', key: 'ssl', name: 'SSL Status' },
             { id: 'chk-col-registrar', class: 'col-registrar', key: 'registrar', name: 'Registrar' },
             { id: 'chk-col-created', class: 'col-created', key: 'created', name: 'Creation Date' },
+            { id: 'chk-col-updated', class: 'col-updated', key: 'updated', name: 'Updated Date' },
             { id: 'chk-col-expiry', class: 'col-expiry', key: 'expiry', name: 'Expiry Date' },
             { id: 'chk-col-age', class: 'col-age', key: 'ageStr', name: 'Domain Age' },
             { id: 'chk-col-public-status', class: 'col-public-status', key: 'status', name: 'Public Status' },
@@ -730,7 +735,7 @@
             document.getElementById('dnsDomainInput').value = '';
             document.getElementById('dnsResultsTableBody').innerHTML = `
                 <tr>
-                    <td colspan="16" class="text-center py-16 theme-text-muted font-sans">
+                    <td colspan="17" class="text-center py-16 theme-text-muted font-sans">
                         <i class="fa-solid fa-table text-4xl mb-3 block opacity-40"></i>
                         Enter domain names above and click <span class="text-emerald-400 font-semibold">"Check Records & Status"</span>
                     </td>
@@ -808,6 +813,7 @@
                     <td class="p-3 col-ssl"><i class="fa-solid fa-circle-notch fa-spin text-emerald-400"></i></td>
                     <td class="p-3 col-registrar"><i class="fa-solid fa-circle-notch fa-spin theme-text-muted"></i></td>
                     <td class="p-3 col-created"><i class="fa-solid fa-circle-notch fa-spin theme-text-muted"></i></td>
+                    <td class="p-3 col-updated"><i class="fa-solid fa-circle-notch fa-spin theme-text-muted"></i></td>
                     <td class="p-3 col-expiry"><i class="fa-solid fa-circle-notch fa-spin theme-text-muted"></i></td>
                     <td class="p-3 col-age"><i class="fa-solid fa-circle-notch fa-spin theme-text-muted"></i></td>
                     <td class="p-3 col-public-status"><i class="fa-solid fa-circle-notch fa-spin text-emerald-400"></i></td>
@@ -856,6 +862,7 @@
                 : `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-500/20 text-rose-400 border border-rose-500/30">No SSL</span>`;
             row.querySelector('.col-registrar').innerHTML = formatCell(whoisData.registrar);
             row.querySelector('.col-created').innerHTML = formatCell(whoisData.createdDate);
+            row.querySelector('.col-updated').innerHTML = formatCell(whoisData.updatedDate);
             row.querySelector('.col-expiry').innerHTML = formatCell(whoisData.expiryDate);
             row.querySelector('.col-age').innerHTML = formatCell(whoisData.ageStr);
             row.querySelector('.col-public-status').innerHTML = whoisData.registered 
@@ -876,6 +883,7 @@
                 ssl: sslStatus ? 'Active' : 'No SSL',
                 registrar: whoisData.registrar,
                 created: whoisData.createdDate,
+                updated: whoisData.updatedDate,
                 expiry: whoisData.expiryDate,
                 ageStr: whoisData.ageStr,
                 ageDays: whoisData.ageDays,
@@ -913,16 +921,20 @@
                 const data = await res.json();
 
                 let registrar = 'N/A', registrantName = 'N/A', orgName = 'N/A';
-                let createdDate = 'N/A', expiryDate = 'N/A', ageDays = 0, ageStr = 'N/A';
+                let createdDate = 'N/A', updatedDate = 'N/A', expiryDate = 'N/A', ageDays = 0, ageStr = 'N/A';
 
                 if (data.events) {
                     const regEv = data.events.find(e => e.eventAction === 'registration');
+                    const updEv = data.events.find(e => e.eventAction === 'last changed' || e.eventAction === 'last update' || e.eventAction === 'last modified');
                     const expEv = data.events.find(e => e.eventAction === 'expiration');
                     if (regEv) {
                         const dt = new Date(regEv.eventDate);
                         createdDate = dt.toISOString().split('T')[0];
                         ageDays = Math.floor((new Date() - dt) / (1000 * 60 * 60 * 24));
                         ageStr = `${Math.floor(ageDays / 365)} yrs ${ageDays % 365} days`;
+                    }
+                    if (updEv) {
+                        updatedDate = new Date(updEv.eventDate).toISOString().split('T')[0];
                     }
                     if (expEv) expiryDate = new Date(expEv.eventDate).toISOString().split('T')[0];
                 }
@@ -942,9 +954,9 @@
                     }
                 }
 
-                return { registrar, registered: true, createdDate, expiryDate, ageDays, ageStr, registrantName, orgName, status: 'Active' };
+                return { registrar, registered: true, createdDate, updatedDate, expiryDate, ageDays, ageStr, registrantName, orgName, status: 'Active' };
             } catch (e) {
-                return { registrar: 'N/A', registered: false, createdDate: 'N/A', expiryDate: 'N/A', ageDays: 0, ageStr: 'N/A', registrantName: 'N/A', orgName: 'N/A', status: 'Unregistered' };
+                return { registrar: 'N/A', registered: false, createdDate: 'N/A', updatedDate: 'N/A', expiryDate: 'N/A', ageDays: 0, ageStr: 'N/A', registrantName: 'N/A', orgName: 'N/A', status: 'Unregistered' };
             }
         }
 
@@ -1030,6 +1042,7 @@
                     <td class="p-3 col-ssl">${item.ssl}</td>
                     <td class="p-3 col-registrar">${formatCell(item.registrar)}</td>
                     <td class="p-3 col-created">${formatCell(item.created)}</td>
+                    <td class="p-3 col-updated">${formatCell(item.updated)}</td>
                     <td class="p-3 col-expiry">${formatCell(item.expiry)}</td>
                     <td class="p-3 col-age">${formatCell(item.ageStr)}</td>
                     <td class="p-3 col-public-status">${item.status}</td>
