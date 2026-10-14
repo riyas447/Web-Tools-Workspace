@@ -123,6 +123,19 @@
             box-shadow: 0 10px 25px -10px rgba(168, 85, 247, 0.25);
             transform: translateY(-2px);
         }
+
+        /* Selectable Word Style */
+        .fancy-word-item {
+            cursor: pointer;
+            display: inline-block;
+            padding: 1px 3px;
+            border-radius: 4px;
+            transition: background-color 0.15s ease, color 0.15s ease;
+            user-select: text !important;
+        }
+        .fancy-word-item:hover {
+            background-color: rgba(168, 85, 247, 0.25);
+        }
     </style>
 </head>
 <body class="h-full flex flex-col md:flex-row overflow-hidden" id="appBody">
@@ -561,7 +574,7 @@
                         </label>
                     </div>
 
-                    <button onclick="generateUniqueWords()" class="w-full py-3 px-4 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-xl shadow-lg transition duration-150 flex items-center justify-center gap-2 text-xs">
+                    <button onclick="generateUniqueWords(true)" class="w-full py-3 px-4 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-xl shadow-lg transition duration-150 flex items-center justify-center gap-2 text-xs">
                         <i class="fa-solid fa-wand-magic-sparkles"></i>
                         <span>Generate Words</span>
                     </button>
@@ -1401,6 +1414,28 @@
             renderFancyGrid();
         }
 
+        function formatSelectableWords(transformedText) {
+            // Split by space/newlines to render each word wrapped in interactive span
+            const parts = transformedText.split(/(\s+)/);
+            return parts.map(part => {
+                if (part.trim().length === 0) {
+                    return part.replace(/\n/g, '<br/>');
+                }
+                const cleanPart = escapeHtml(part);
+                return `<span class="fancy-word-item" onclick="selectSpecificWord(event, this)" title="Left Click to Select Word">${cleanPart}</span>`;
+            }).join('');
+        }
+
+        function selectSpecificWord(event, element) {
+            event.stopPropagation();
+            const range = document.createRange();
+            range.selectNodeContents(element);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            showToast(`Selected word: "${element.innerText}"`);
+        }
+
         function renderFancyGrid() {
             const inputVal = document.getElementById('fancy-main-input').value || "FANCY DESIGN";
             const grid = document.getElementById('fancy-font-grid');
@@ -1421,6 +1456,7 @@
             grid.innerHTML = filtered.map(font => {
                 const transformed = font.transform(inputVal);
                 const isFav = fancyFavorites.has(font.id);
+                const interactiveContent = formatSelectableWords(transformed);
 
                 return `
                     <div class="fancy-card rounded-2xl p-4 flex flex-col justify-between group">
@@ -1434,14 +1470,15 @@
                                     </button>
                                 </div>
                             </div>
-                            <div class="theme-text-main text-sm sm:text-base break-words line-clamp-4 min-h-[3rem] py-1 select-all font-sans">
-                                ${escapeHtml(transformed)}
+                            <div class="theme-text-main text-sm sm:text-base break-words line-clamp-4 min-h-[3rem] py-1 font-sans">
+                                ${interactiveContent}
                             </div>
                         </div>
 
-                        <div class="flex items-center justify-end pt-3 mt-2 border-t theme-border">
+                        <div class="flex items-center justify-between pt-3 mt-2 border-t theme-border text-[10px] theme-text-muted">
+                            <span class="italic opacity-80"><i class="fa-solid fa-i-cursor me-1"></i>Click word to select</span>
                             <button onclick="copyFancyText(\`${escapeHtml(transformed)}\`)" class="px-3 py-1.5 bg-purple-600 hover:bg-purple-500 text-white text-xs font-mono font-bold rounded-xl transition flex items-center gap-1.5 active:scale-95 shadow">
-                                <i class="fa-regular fa-copy"></i> Copy
+                                <i class="fa-regular fa-copy"></i> Copy All
                             </button>
                         </div>
                     </div>
@@ -1538,7 +1575,7 @@
             return result;
         }
 
-        function generateUniqueWords() {
+        function generateUniqueWords(showNotification = false) {
             const count = parseInt(document.getElementById('wordCount').value);
             const length = parseInt(document.getElementById('letterCount').value);
             const isReadable = document.getElementById('readableMode').checked;
@@ -1565,7 +1602,10 @@
 
             generatedWordsList = Array.from(wordsSet);
             renderWordsList(generatedWordsList);
-            showToast(`Generated ${generatedWordsList.length} unique words.`);
+
+            if (showNotification) {
+                showToast(`Generated ${generatedWordsList.length} unique words.`);
+            }
         }
 
         function renderWordsList(words) {
@@ -1610,7 +1650,7 @@
         // Initialize Workspace On Load
         window.onload = function() {
             initFancyTool();
-            generateUniqueWords();
+            generateUniqueWords(false); // Initial load: silent generate without popup
         };
     </script>
 </body>
